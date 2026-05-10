@@ -1,0 +1,3244 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IELTS Library – Thầy Du Gia Văn</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Quicksand:wght@500;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --c-sky-top: #87ceeb;
+            --c-sky-mid: #b0e2ff;
+            --c-sky-bottom: #e0f6ff;
+            --c-card: rgba(255, 253, 250, 0.95);
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+            --font-cute: 'Quicksand', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background: #fff;
+            overflow: hidden;
+            color: #4a5568;
+            /* Giúp cuộn trên mobile mượt hơn */
+            touch-action: none;
+        }
+
+        /* ══ MASTER CONTAINER ══ */
+        .master-scroll-container {
+            height: 100vh;
+            overflow-y: hidden;
+            background: linear-gradient(to bottom, var(--c-sky-top) 0%, var(--c-sky-mid) 40%, var(--c-sky-bottom) 70%, #ffffff 100%);
+            position: relative;
+        }
+
+        /* ══ NAVIGATION MENU (LEFT) ══ */
+        .ghibli-nav {
+            position: fixed;
+            top: 1.5rem;
+            left: 1.5rem;
+            z-index: 200;
+        }
+
+        .nav-trigger {
+            width: 45px;
+            height: 45px;
+            background: var(--c-card);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+            border: 1px solid white;
+            transition: 0.3s;
+        }
+
+        .nav-trigger:hover {
+            transform: scale(1.1);
+        }
+
+        .nav-trigger span {
+            width: 20px;
+            height: 2px;
+            background: #6fc2e9;
+            position: relative;
+        }
+
+        .nav-trigger span::before,
+        .nav-trigger span::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: inherit;
+            left: 0;
+        }
+
+        .nav-trigger span::before {
+            top: -6px;
+        }
+
+        .nav-trigger span::after {
+            bottom: -6px;
+        }
+
+        .nav-content {
+            position: absolute;
+            top: 55px;
+            left: 0;
+            background: var(--c-card);
+            border-radius: 20px;
+            padding: 1.2rem;
+            width: min(280px, 80vw);
+            transform: scale(0.9);
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid white;
+        }
+
+        .ghibli-nav:hover .nav-content {
+            transform: scale(1);
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .nav-item {
+            display: block;
+            padding: 0.7rem 1rem;
+            color: #4a5568;
+            text-decoration: none;
+            font-size: 0.9rem;
+            border-radius: 10px;
+            transition: 0.2s;
+            margin-bottom: 0.3rem;
+            cursor: pointer;
+        }
+
+        .nav-item:hover {
+            background: #fff;
+            color: #6fc2e9;
+            padding-left: 1.3rem;
+        }
+
+        /* ══ SIDE CONTROLS (RIGHT) ══ */
+        .side-controls {
+            position: fixed;
+            right: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .nav-btn {
+            width: 45px;
+            height: 45px;
+            background: var(--c-card);
+            border: 1px solid white;
+            border-radius: 12px;
+            color: #6fc2e9;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: 0.3s;
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.2;
+            cursor: not-allowed;
+        }
+
+        /* ══ SECTIONS ══ */
+        .sections-wrapper {
+            transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+            height: 100%;
+        }
+
+        .hero-section {
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            padding: 1rem;
+        }
+
+        .parallax-subject {
+            position: absolute;
+            font-family: var(--font-cute);
+            font-size: clamp(3rem, 15vw, 10rem);
+            font-weight: 800;
+            color: #fff;
+            opacity: 0.2;
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* ══ INFO CARD (TRÁI TIM CỦA APP) ══ */
+        .info-card {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 850px;
+            max-height: 80vh;
+            /* Giới hạn để không mất tiêu đề trên máy nhỏ */
+            background: var(--c-card);
+            backdrop-filter: blur(20px);
+            border-radius: 35px;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 20px 50px rgba(135, 206, 235, 0.1);
+            display: flex;
+            flex-direction: column;
+            margin: 0 auto;
+        }
+
+        .card-header {
+            padding: 1.8rem 2rem 0.8rem;
+            flex-shrink: 0;
+        }
+
+        .card-body {
+            padding: 0 2rem 2rem;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            /* Mượt trên iPhone */
+        }
+
+        /* Scrollbar xinh xắn */
+        .card-body::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .card-body::-webkit-scrollbar-thumb {
+            background: #b0e2ff;
+            border-radius: 10px;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            color: #fff;
+        }
+
+        .tag-topic {
+            background: #d1b2f2;
+        }
+
+        .tag-5 {
+            background: #ffb7b2;
+        }
+
+        .tag-7 {
+            background: #b2e2f2;
+        }
+
+        .tag-9 {
+            background: #b2f2bb;
+        }
+
+        .tag-summary {
+            background: #f2e2b2;
+        }
+
+        h2 {
+            font-family: var(--font-cute);
+            color: #2d3748;
+            font-size: clamp(1.2rem, 4vw, 1.8rem);
+            line-height: 1.3;
+        }
+
+        .content-text {
+            font-size: clamp(0.95rem, 3vw, 1.1rem);
+            line-height: 1.6;
+            color: #4a5568;
+        }
+
+        .logic-note {
+            margin-top: 1.2rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 18px;
+            font-size: 0.9rem;
+            border-left: 4px solid #b0e2ff;
+            font-style: italic;
+        }
+
+        .ghibli-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 8px;
+        }
+
+        .ghibli-table td {
+            padding: 0.8rem;
+            background: white;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 0.5rem;
+            width: 100%;
+            text-align: center;
+            font-size: 0.6rem;
+            color: #718096;
+            z-index: 100;
+            opacity: 0.5;
+        }
+
+        /* ══ TỐI ƯU CHO MOBILE & TABLET ══ */
+        @media (max-width: 1024px) {
+            .info-card {
+                max-width: 85%;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .side-controls {
+                right: 0.8rem;
+                gap: 10px;
+            }
+
+            .nav-btn {
+                width: 40px;
+                height: 40px;
+            }
+
+            .ghibli-nav {
+                top: 1rem;
+                left: 1rem;
+            }
+
+            .info-card {
+                max-height: 75vh;
+                border-radius: 25px;
+                width: 92%;
+            }
+
+            .card-header {
+                padding: 1.2rem 1.2rem 0.5rem;
+            }
+
+            .card-body {
+                padding: 0 1.2rem 1.5rem;
+            }
+
+            .parallax-subject {
+                opacity: 0.1;
+                top: 15%;
+            }
+
+            /* Ẩn bớt bảng hoặc thu nhỏ nếu quá dài trên mobile */
+            .ghibli-table td {
+                font-size: 0.75rem;
+                padding: 0.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="ghibli-nav">
+        <div class="nav-trigger"><span></span></div>
+        <div class="nav-content" id="nav-list">
+            <div class="nav-title"
+                style="font-weight: 800; font-size: 0.7rem; color: #6fc2e9; margin-bottom: 10px; letter-spacing: 1px;">
+                CHỌN CHỦ ĐỀ</div>
+        </div>
+    </nav>
+
+    <div class="side-controls">
+        <button class="nav-btn" id="btn-up" onclick="moveSection(-1)" title="Lên tầng trên">▲</button>
+        <button class="nav-btn" id="btn-down" onclick="moveSection(1)" title="Xuống tầng dưới">▼</button>
+    </div>
+
+    <div class="master-scroll-container">
+        <div class="sections-wrapper" id="sections-wrapper">
+        </div>
+    </div>
+
+    <div class="footer">✦ DESIGNED WITH LOVE BY THẦY DU GIA VĂN ✦</div>
+
+    <script>
+        const IELTS_DATA = [
+            {
+                id: "topic_children",
+
+                topicName: "Trẻ em & Thành phố",
+
+                subjectText: "CITY LIFE",
+
+                mainTopic: {
+                    title: "Chủ đề: Trẻ em nên lớn lên ở đâu?",
+
+                    content: `
+        <b>Topic:</b> Some people think that it is better for children to grow up in the city. Others, however, believe that the countryside is a better place for them.
+
+        <br><br>
+
+        <b>Question Analysis:</b>
+        Đề yêu cầu so sánh môi trường sống giữa thành phố và nông thôn đối với trẻ em. 
+        Có thể triển khai theo:
+        <ul>
+            <li>Giáo dục</li>
+            <li>Kỹ năng xã hội</li>
+            <li>Cơ hội nghề nghiệp tương lai</li>
+            <li>Sức khỏe tinh thần</li>
+            <li>Môi trường sống</li>
+            <li>Mức độ an toàn</li>
+        </ul>
+
+        <b>Main Direction:</b>
+        Phân tích lý do vì sao môi trường đô thị giúp trẻ phát triển tốt hơn về học tập, kỹ năng và khả năng cạnh tranh trong tương lai.
+        `,
+
+                    logic: `
+        Logic triển khai:
+        <br>
+        City → Better education → Better skills → Better career opportunities → Higher social mobility
+        `
+                },
+
+                band5: {
+                    title: "Ý tưởng đơn giản",
+
+                    content: `
+        Thành phố là nơi tốt cho trẻ em vì có nhiều <b>good schools</b>, <b>modern hospitals</b> và nhiều nơi giải trí như <b>parks</b>, <b>cinemas</b> hoặc <b>shopping malls</b>. 
+        Trẻ em ở thành phố có thể học trong môi trường tốt hơn và có cơ hội sử dụng <b>technology</b> từ sớm. 
+
+        Ngoài ra, thành phố có nhiều <b>sports centers</b>, <b>libraries</b> và <b>activities</b> giúp trẻ phát triển kỹ năng giao tiếp và tự tin hơn. 
+        Phụ huynh ở thành phố thường có <b>stable jobs</b> và <b>higher salaries</b>, vì vậy họ có thể chăm sóc con cái tốt hơn.
+
+        Thành phố cũng có hệ thống <b>public transport</b> thuận tiện và nhiều <b>educational programs</b> dành cho trẻ em. 
+        Vì có nhiều <b>opportunities</b>, trẻ em ở thành phố thường có <b>better education</b>, học được nhiều <b>communication skills</b> và dễ có tương lai tốt hơn.
+        
+        <br><br>
+
+        <b>Useful Vocabulary:</b>
+
+        <ul>
+            <li><b>good schools</b> — trường học tốt</li>
+            <li><b>modern hospitals</b> — bệnh viện hiện đại</li>
+            <li><b>technology</b> — công nghệ</li>
+            <li><b>stable jobs</b> — công việc ổn định</li>
+            <li><b>higher salaries</b> — mức lương cao hơn</li>
+            <li><b>parks</b> — công viên</li>
+            <li><b>cinemas</b> — rạp chiếu phim</li>
+            <li><b>shopping malls</b> — trung tâm thương mại</li>
+            <li><b>sports centers</b> — trung tâm thể thao</li>
+            <li><b>libraries</b> — thư viện</li>
+            <li><b>activities</b> — hoạt động</li>
+            <li><b>public transport</b> — phương tiện công cộng</li>
+            <li><b>better education</b> — nền giáo dục tốt hơn</li>
+            <li><b>communication skills</b> — kỹ năng giao tiếp</li>
+            <li><b>opportunities</b> — cơ hội</li>
+        </ul>
+        `,
+
+                    logic: `
+        Logic:
+        <br>
+        Thành phố có nhiều tiện ích → trẻ em học tốt hơn → có cuộc sống và tương lai tốt hơn.
+        `
+                },
+
+                band7: {
+                    title: "Chiều sâu & Mở rộng",
+
+                    content: `
+        Môi trường đô thị cung cấp <b>nền tảng giáo dục vượt trội</b> cho trẻ em nhờ vào hệ thống <b>high-quality schools</b>, các <b>language centers</b> và nhiều chương trình <b>extracurricular activities</b>. 
+        Trẻ em ở thành phố thường được tiếp cận với <b>advanced technology</b> và <b>educational resources</b> từ sớm, điều này giúp cải thiện khả năng học tập và tư duy độc lập.
+
+        Bên cạnh đó, môi trường <b>competitive</b> tại đô thị cũng thúc đẩy trẻ phát triển <b>critical thinking</b>, <b>problem-solving skills</b> và khả năng <b>adaptability</b>. 
+        Việc sống trong các <b>multicultural environments</b> còn giúp trẻ mở rộng <b>social awareness</b> và học cách giao tiếp với nhiều kiểu người khác nhau.
+
+        Ngoài ra, thành phố thường có hệ thống <b>healthcare facilities</b>, <b>public services</b> và <b>career opportunities</b> phát triển hơn khu vực nông thôn. 
+        Điều này tạo ra nền tảng tốt hơn cho <b>future careers</b> và giúp trẻ chuẩn bị hiệu quả hơn cho xã hội hiện đại.
+
+        <br><br>
+
+        <b>Useful Vocabulary:</b>
+
+        <ul>
+            <li><b>high-quality schools</b> — trường học chất lượng cao</li>
+            <li><b>language centers</b> — trung tâm ngoại ngữ</li>
+            <li><b>extracurricular activities</b> — hoạt động ngoại khóa</li>
+            <li><b>advanced technology</b> — công nghệ tiên tiến</li>
+            <li><b>educational resources</b> — tài nguyên giáo dục</li>
+            <li><b>competitive environment</b> — môi trường cạnh tranh</li>
+            <li><b>critical thinking</b> — tư duy phản biện</li>
+            <li><b>problem-solving skills</b> — kỹ năng giải quyết vấn đề</li>
+            <li><b>adaptability</b> — khả năng thích nghi</li>
+            <li><b>multicultural environments</b> — môi trường đa văn hóa</li>
+            <li><b>social awareness</b> — nhận thức xã hội</li>
+            <li><b>healthcare facilities</b> — cơ sở y tế</li>
+            <li><b>public services</b> — dịch vụ công</li>
+            <li><b>career opportunities</b> — cơ hội nghề nghiệp</li>
+            <li><b>future careers</b> — nghề nghiệp tương lai</li>
+        </ul>
+        `,
+
+                    logic: `
+        Logic:
+        <br>
+        Urban environment → Better education and exposure → Skill development → Better preparation for adult life.
+        `
+                },
+
+                band9: {
+                    title: "Đa chiều & Phản biện",
+
+                    content: `
+        Thành phố là một <b>hệ sinh thái thúc đẩy thăng tiến xã hội</b>, nơi trẻ em có thể tiếp cận <b>world-class education</b>, <b>professional networks</b> và môi trường <b>highly competitive</b> ngay từ nhỏ. 
+        Những yếu tố này hoạt động như các <b>catalysts</b> giúp trẻ phát triển <b>critical reasoning</b>, <b>social adaptability</b> và <b>career ambition</b> trong thời đại <b>globalization</b>.
+
+        Không giống như khu vực nông thôn, các đô thị lớn thường sở hữu hệ thống <b>educational infrastructure</b> và <b>economic resources</b> mạnh hơn đáng kể. 
+        Điều này cho phép trẻ tiếp cận với <b>international programs</b>, môi trường học tập hiện đại và các cơ hội phát triển cá nhân mang tính toàn cầu.
+
+        Tuy nhiên, cuộc sống thành thị cũng có thể dẫn đến <b>psychological pressure</b>, <b>academic competition</b> và cảm giác <b>social isolation</b>. 
+        Trẻ em ở đô thị đôi khi phải đối mặt với nhịp sống quá nhanh và mức độ cạnh tranh cao, điều này có thể ảnh hưởng đến sức khỏe tinh thần.
+
+        Dù vậy, xét trên khía cạnh dài hạn, lợi ích về <b>socioeconomic mobility</b>, <b>educational attainment</b>, <b>social integration</b> và <b>economic prospects</b> thường vượt trội hơn đáng kể. 
+        Trong nhiều trường hợp, môi trường thành thị không chỉ ảnh hưởng đến chất lượng giáo dục mà còn định hình <b>social status</b>, tư duy toàn cầu và khả năng thành công của trẻ trong nền kinh tế hiện đại.
+
+        <br><br>
+
+        <b>Useful Vocabulary:</b>
+
+        <ul>
+            <li><b>world-class education</b> — nền giáo dục đẳng cấp thế giới</li>
+            <li><b>professional networks</b> — mạng lưới quan hệ nghề nghiệp</li>
+            <li><b>highly competitive</b> — có tính cạnh tranh cao</li>
+            <li><b>catalysts</b> — chất xúc tác</li>
+            <li><b>critical reasoning</b> — tư duy lập luận phản biện</li>
+            <li><b>social adaptability</b> — khả năng thích nghi xã hội</li>
+            <li><b>career ambition</b> — tham vọng nghề nghiệp</li>
+            <li><b>globalization</b> — toàn cầu hóa</li>
+            <li><b>educational infrastructure</b> — cơ sở hạ tầng giáo dục</li>
+            <li><b>economic resources</b> — nguồn lực kinh tế</li>
+            <li><b>international programs</b> — chương trình quốc tế</li>
+            <li><b>psychological pressure</b> — áp lực tâm lý</li>
+            <li><b>academic competition</b> — cạnh tranh học tập</li>
+            <li><b>social isolation</b> — sự cô lập xã hội</li>
+            <li><b>socioeconomic mobility</b> — khả năng thăng tiến kinh tế xã hội</li>
+            <li><b>educational attainment</b> — thành tựu học vấn</li>
+            <li><b>social integration</b> — khả năng hòa nhập xã hội</li>
+            <li><b>economic prospects</b> — triển vọng kinh tế</li>
+            <li><b>social status</b> — địa vị xã hội</li>
+        </ul>
+        `,
+
+                    logic: `
+        Logic:
+        <br>
+        City environment → Access to elite systems and networks → Development of high-level skills → Long-term socioeconomic advantages.
+        <br><br>
+        Đồng thời cân bằng:
+        <br>
+        Advantages ↔ Psychological pressure ↔ Long-term benefits.
+        `
+                },
+
+                summaryTable: [
+                    {
+                        label: 'Trọng tâm',
+                        b5: 'Tiện ích & trường học',
+                        b7: 'Phát triển kỹ năng',
+                        b9: 'Thăng tiến xã hội'
+                    },
+
+                    {
+                        label: 'Kiểu lập luận',
+                        b5: 'Nêu lợi ích trực tiếp',
+                        b7: 'Cause - Effect',
+                        b9: 'Đa chiều & phản biện'
+                    },
+
+                    {
+                        label: 'Góc nhìn',
+                        b5: 'Cá nhân',
+                        b7: 'Giáo dục & xã hội',
+                        b9: 'Hệ thống xã hội'
+                    },
+
+                    {
+                        label: 'Độ sâu ý tưởng',
+                        b5: 'Một lớp ý',
+                        b7: 'Mở rộng hệ quả',
+                        b9: 'Hệ thống & dài hạn'
+                    },
+
+                    {
+                        label: 'Từ khóa nổi bật',
+                        b5: 'Good schools, opportunities',
+                        b7: 'Adaptability, multicultural',
+                        b9: 'Socioeconomic mobility, globalization'
+                    }
+                ]
+            },
+            {
+                id: "topic_technology_isolation",
+
+                topicName: "Công nghệ & Sự cô lập",
+
+                subjectText: "TECHNOLOGY AND SOCIAL LIFE",
+
+                mainTopic: {
+                    title: "Chủ đề: Công nghệ giúp kết nối hay làm con người cô lập hơn?",
+
+                    content: `
+        <b>Topic:</b> Many people believe that technology helps people become closer to each other, while others think that it increases social isolation.
+
+        <br><br>
+
+        <b>Question Analysis:</b>
+        Đề yêu cầu phân tích hai mặt của công nghệ:
+        <ul>
+            <li>Công nghệ giúp kết nối con người dễ dàng hơn</li>
+            <li>Công nghệ làm giảm tương tác trực tiếp và tăng sự cô lập</li>
+            <li>Ảnh hưởng đến gia đình, bạn bè và xã hội</li>
+            <li>Ảnh hưởng đến sức khỏe tinh thần</li>
+            <li>Sự thay đổi trong cách con người giao tiếp</li>
+        </ul>
+
+        <b>Main Direction:</b>
+        Phân tích cách công nghệ vừa cải thiện khả năng giao tiếp toàn cầu, vừa tạo ra nguy cơ cô lập xã hội và phụ thuộc vào tương tác trực tuyến.
+        `,
+
+                    logic: `
+        Logic triển khai:
+        <br>
+        Technology → Easier communication → Global connection
+        <br><br>
+        However:
+        <br>
+        Excessive technology use → Reduced face-to-face interaction → Social isolation
+        `
+                },
+
+                band5: {
+                    title: "Ý tưởng đơn giản",
+
+                    content: `
+        Công nghệ giúp con người liên lạc dễ dàng hơn thông qua <b>smartphones</b>, <b>social media</b> và các ứng dụng nhắn tin. 
+        Mọi người có thể gọi video, gửi tin nhắn hoặc chia sẻ hình ảnh với bạn bè và gia đình ở xa chỉ trong vài giây.
+
+        Ngoài ra, công nghệ còn giúp mọi người học tập, làm việc và giải trí thuận tiện hơn nhờ <b>the Internet</b>. 
+        Nhiều người sử dụng <b>online platforms</b> để kết bạn và giữ liên lạc mỗi ngày.
+
+        Tuy nhiên, việc sử dụng điện thoại quá nhiều có thể làm giảm <b>face-to-face communication</b>. 
+        Một số người dành quá nhiều thời gian trên mạng và trở nên <b>lonely</b> hoặc ít giao tiếp ngoài đời thật.
+
+        Công nghệ cũng khiến nhiều người bị <b>addicted to screens</b> và ít tham gia các hoạt động xã hội. 
+        Điều này có thể ảnh hưởng đến các mối quan hệ gia đình và tình bạn.
+
+        <br><br>
+
+        <b>Useful Vocabulary:</b>
+
+        <ul>
+            <li><b>smartphones</b> — điện thoại thông minh</li>
+            <li><b>social media</b> — mạng xã hội</li>
+            <li><b>the Internet</b> — Internet</li>
+            <li><b>online platforms</b> — nền tảng trực tuyến</li>
+            <li><b>video calls</b> — cuộc gọi video</li>
+            <li><b>messages</b> — tin nhắn</li>
+            <li><b>face-to-face communication</b> — giao tiếp trực tiếp</li>
+            <li><b>lonely</b> — cô đơn</li>
+            <li><b>social activities</b> — hoạt động xã hội</li>
+            <li><b>addicted to screens</b> — nghiện màn hình</li>
+            <li><b>communication</b> — giao tiếp</li>
+            <li><b>relationships</b> — các mối quan hệ</li>
+            <li><b>technology</b> — công nghệ</li>
+            <li><b>convenient</b> — tiện lợi</li>
+            <li><b>friends and family</b> — bạn bè và gia đình</li>
+        </ul>
+        `,
+
+                    logic: `
+        Logic:
+        <br>
+        Công nghệ giúp liên lạc dễ hơn nhưng cũng làm con người ít giao tiếp trực tiếp hơn.
+        `
+                },
+
+                band7: {
+                    title: "Chiều sâu & Mở rộng",
+
+                    content: `
+        Công nghệ hiện đại đã cải thiện đáng kể khả năng giao tiếp toàn cầu thông qua <b>instant communication</b>, <b>social networking sites</b> và các nền tảng <b>virtual interaction</b>. 
+        Nhờ đó, mọi người có thể duy trì các mối quan hệ cá nhân và nghề nghiệp bất chấp khoảng cách địa lý.
+
+        Ngoài ra, công nghệ còn tạo điều kiện cho <b>remote working</b>, <b>online learning</b> và chia sẻ thông tin với tốc độ nhanh hơn bao giờ hết. 
+        Điều này giúp xã hội trở nên kết nối và hiệu quả hơn trong nhiều lĩnh vực.
+
+        Tuy nhiên, sự phụ thuộc quá mức vào <b>digital communication</b> có thể làm suy giảm chất lượng của <b>real-life interaction</b>. 
+        Nhiều người, đặc biệt là giới trẻ, dành phần lớn thời gian trên mạng xã hội thay vì xây dựng các mối quan hệ thực tế.
+
+        Hơn nữa, việc tiếp xúc liên tục với môi trường trực tuyến có thể dẫn đến <b>social withdrawal</b>, <b>emotional disconnection</b> và các vấn đề về <b>mental health</b>. 
+        Mặc dù công nghệ giúp kết nối về mặt kỹ thuật, nó đôi khi lại làm giảm chiều sâu cảm xúc trong giao tiếp con người.
+
+        <br><br>
+
+        <b>Useful Vocabulary:</b>
+
+        <ul>
+            <li><b>instant communication</b> — giao tiếp tức thời</li>
+            <li><b>social networking sites</b> — trang mạng xã hội</li>
+            <li><b>virtual interaction</b> — tương tác ảo</li>
+            <li><b>remote working</b> — làm việc từ xa</li>
+            <li><b>online learning</b> — học trực tuyến</li>
+            <li><b>digital communication</b> — giao tiếp kỹ thuật số</li>
+            <li><b>real-life interaction</b> — tương tác ngoài đời thật</li>
+            <li><b>social withdrawal</b> — xu hướng tách biệt xã hội</li>
+            <li><b>emotional disconnection</b> — sự mất kết nối cảm xúc</li>
+            <li><b>mental health</b> — sức khỏe tinh thần</li>
+            <li><b>global connection</b> — kết nối toàn cầu</li>
+            <li><b>human interaction</b> — tương tác con người</li>
+            <li><b>dependence on technology</b> — sự phụ thuộc vào công nghệ</li>
+            <li><b>efficient communication</b> — giao tiếp hiệu quả</li>
+            <li><b>online communities</b> — cộng đồng trực tuyến</li>
+        </ul>
+        `,
+
+                    logic: `
+        Logic:
+        <br>
+        Technology improves global communication → But overreliance on digital interaction weakens real human connection.
+        `
+                },
+
+                band9: {
+                    title: "Đa chiều & Phản biện",
+
+                    content: `
+        Công nghệ hiện đại đã tái định hình cách con người xây dựng và duy trì các mối quan hệ thông qua <b>digital ecosystems</b>, <b>global connectivity</b> và các nền tảng <b>real-time communication</b>. 
+        Trong bối cảnh toàn cầu hóa, công nghệ đóng vai trò như một <b>catalyst</b> giúp xóa bỏ rào cản địa lý và thúc đẩy sự kết nối xuyên quốc gia.
+
+        Các công cụ như <b>video conferencing</b>, <b>social media platforms</b> và <b>collaborative technologies</b> cho phép con người duy trì quan hệ cá nhân cũng như nghề nghiệp với mức độ tiện lợi chưa từng có. 
+        Điều này đặc biệt quan trọng đối với những người sống xa gia đình hoặc làm việc trong môi trường quốc tế.
+
+        Tuy nhiên, sự mở rộng của <b>virtual communication</b> cũng đi kèm với nguy cơ gia tăng <b>social isolation</b> và <b>psychological detachment</b>. 
+        Khi các tương tác trực tiếp bị thay thế bởi màn hình và thuật toán, nhiều cá nhân dần đánh mất khả năng xây dựng các mối quan hệ sâu sắc và chân thật.
+
+        Hơn nữa, sự phụ thuộc vào <b>digital validation</b>, chẳng hạn như lượt thích hoặc bình luận trên mạng xã hội, có thể tạo ra <b>emotional insecurity</b> và cảm giác cô đơn kéo dài. 
+        Một số nghiên cứu còn cho thấy việc sử dụng công nghệ quá mức có liên hệ với <b>depression</b>, <b>anxiety disorders</b> và suy giảm chất lượng giao tiếp xã hội.
+
+        Mặc dù công nghệ rõ ràng mang lại khả năng kết nối toàn cầu chưa từng có, giá trị thực sự của các mối quan hệ con người vẫn phụ thuộc vào <b>emotional intimacy</b>, sự hiện diện ngoài đời thực và khả năng đồng cảm — những yếu tố mà công nghệ khó có thể thay thế hoàn toàn.
+
+        <br><br>
+
+        <b>Useful Vocabulary:</b>
+
+        <ul>
+            <li><b>digital ecosystems</b> — hệ sinh thái kỹ thuật số</li>
+            <li><b>global connectivity</b> — kết nối toàn cầu</li>
+            <li><b>real-time communication</b> — giao tiếp thời gian thực</li>
+            <li><b>catalyst</b> — chất xúc tác</li>
+            <li><b>video conferencing</b> — hội nghị video</li>
+            <li><b>social media platforms</b> — nền tảng mạng xã hội</li>
+            <li><b>collaborative technologies</b> — công nghệ cộng tác</li>
+            <li><b>virtual communication</b> — giao tiếp ảo</li>
+            <li><b>social isolation</b> — sự cô lập xã hội</li>
+            <li><b>psychological detachment</b> — sự tách biệt tâm lý</li>
+            <li><b>digital validation</b> — sự công nhận trên môi trường số</li>
+            <li><b>emotional insecurity</b> — sự bất an cảm xúc</li>
+            <li><b>depression</b> — trầm cảm</li>
+            <li><b>anxiety disorders</b> — rối loạn lo âu</li>
+            <li><b>emotional intimacy</b> — sự gắn kết cảm xúc sâu sắc</li>
+            <li><b>human empathy</b> — sự đồng cảm của con người</li>
+            <li><b>authentic relationships</b> — các mối quan hệ chân thật</li>
+            <li><b>social bonds</b> — liên kết xã hội</li>
+            <li><b>technological dependence</b> — sự phụ thuộc công nghệ</li>
+        </ul>
+        `,
+
+                    logic: `
+        Logic:
+        <br>
+        Technology removes geographical barriers and increases efficiency of communication.
+        <br><br>
+        However:
+        <br>
+        Excessive reliance on virtual interaction → Emotional detachment → Social isolation and weakened human relationships.
+        <br><br>
+        Final evaluation:
+        <br>
+        Technology enhances connectivity technically, but not necessarily emotionally.
+        `
+                },
+
+                summaryTable: [
+                    {
+                        label: 'Trọng tâm',
+                        b5: 'Liên lạc hàng ngày',
+                        b7: 'Tác động xã hội',
+                        b9: 'Kết nối cảm xúc & hệ thống'
+                    },
+
+                    {
+                        label: 'Kiểu lập luận',
+                        b5: 'Ưu & nhược điểm đơn giản',
+                        b7: 'Cause - Effect',
+                        b9: 'Đa chiều & phản biện'
+                    },
+
+                    {
+                        label: 'Góc nhìn',
+                        b5: 'Cá nhân',
+                        b7: 'Xã hội',
+                        b9: 'Tâm lý & xã hội hiện đại'
+                    },
+
+                    {
+                        label: 'Độ sâu ý tưởng',
+                        b5: 'Một lớp ý',
+                        b7: 'Mở rộng hệ quả',
+                        b9: 'Phân tích hệ thống'
+                    },
+
+                    {
+                        label: 'Từ khóa nổi bật',
+                        b5: 'Social media, communication',
+                        b7: 'Digital communication, mental health',
+                        b9: 'Emotional intimacy, social isolation'
+                    }
+                ]
+            },
+            {
+                id: "topic_environment_responsibility",
+
+                topicName: "Môi trường & Trách nhiệm",
+
+                subjectText: "ENVIRONMENTAL PROTECTION",
+
+                mainTopic: {
+                    title: "Chủ đề: Ai nên chịu trách nhiệm bảo vệ môi trường?",
+
+                    content: `
+        <b>Topic:</b> Some people believe that protecting the environment is the responsibility of individuals, while others think that only governments and large companies can make real changes.
+
+        <br><br>
+
+        <b>Question Analysis:</b>
+        Đề yêu cầu phân tích hai quan điểm:
+        <ul>
+            <li>Cá nhân có trách nhiệm thay đổi thói quen sống để bảo vệ môi trường</li>
+            <li>Chính phủ và tập đoàn lớn mới có đủ quyền lực và nguồn lực để tạo ra tác động lớn</li>
+            <li>Vai trò của luật pháp, chính sách và công nghệ xanh</li>
+            <li>Ảnh hưởng của tiêu dùng cá nhân đối với môi trường</li>
+            <li>Sự phối hợp giữa xã hội, doanh nghiệp và nhà nước</li>
+        </ul>
+
+        <b>Main Direction:</b>
+        Phân tích rằng cả cá nhân lẫn tổ chức lớn đều đóng vai trò quan trọng, nhưng quy mô ảnh hưởng của chính phủ và doanh nghiệp thường lớn hơn đáng kể.
+        `,
+
+                    logic: `
+        Logic triển khai:
+        <br>
+        Individual actions → Small daily improvements
+        <br><br>
+        Governments and corporations → Large-scale environmental impact
+        <br><br>
+        Final idea:
+        <br>
+        Environmental protection requires cooperation between individuals, businesses, and governments.
+        `
+                },
+
+                band5: {
+                    title: "Ý tưởng đơn giản",
+
+                    content: `
+        Một số người cho rằng mỗi cá nhân cần có trách nhiệm bảo vệ môi trường bằng cách giảm sử dụng <b>plastic bags</b>, tiết kiệm <b>electricity</b> và tái chế <b>waste</b>. 
+        Những hành động nhỏ như đi xe đạp, tiết kiệm nước hoặc trồng cây có thể giúp giảm <b>pollution</b>.
+
+        Ngoài ra, nhiều người hiện nay sử dụng <b>reusable products</b> thay cho đồ nhựa dùng một lần để bảo vệ thiên nhiên. 
+        Nếu mọi người thay đổi thói quen sống, môi trường có thể trở nên sạch hơn.
+
+        Tuy nhiên, một số người cho rằng cá nhân không thể tạo ra thay đổi lớn vì các <b>factories</b> và tập đoàn lớn mới là nguyên nhân chính gây ô nhiễm. 
+        Chính phủ cần đưa ra <b>environmental laws</b> và kiểm soát khí thải từ các công ty.
+
+        Các doanh nghiệp lớn cũng cần đầu tư vào <b>green energy</b> và công nghệ thân thiện với môi trường để giảm tác động tiêu cực lên hành tinh.
+
+        <br><br>
+
+        <b>Useful Vocabulary:</b>
+
+        <ul>
+            <li><b>plastic bags</b> — túi nhựa</li>
+            <li><b>electricity</b> — điện</li>
+            <li><b>waste</b> — rác thải</li>
+            <li><b>pollution</b> — ô nhiễm</li>
+            <li><b>reusable products</b> — sản phẩm tái sử dụng</li>
+            <li><b>factories</b> — nhà máy</li>
+            <li><b>environmental laws</b> — luật bảo vệ môi trường</li>
+            <li><b>green energy</b> — năng lượng xanh</li>
+            <li><b>recycling</b> — tái chế</li>
+            <li><b>save water</b> — tiết kiệm nước</li>
+            <li><b>public transport</b> — phương tiện công cộng</li>
+            <li><b>global warming</b> — nóng lên toàn cầu</li>
+            <li><b>carbon emissions</b> — khí thải carbon</li>
+            <li><b>environment</b> — môi trường</li>
+            <li><b>climate change</b> — biến đổi khí hậu</li>
+        </ul>
+        `,
+
+                    logic: `
+        Logic:
+        <br>
+        Cá nhân có thể giúp môi trường bằng các hành động nhỏ, nhưng chính phủ và công ty lớn có tác động lớn hơn.
+        `
+                },
+
+                band7: {
+                    title: "Chiều sâu & Mở rộng",
+
+                    content: `
+        Nhiều người tin rằng các cá nhân đóng vai trò quan trọng trong việc bảo vệ môi trường thông qua việc thay đổi <b>daily habits</b> và giảm <b>environmental impact</b>. 
+        Những hành động như sử dụng <b>public transportation</b>, hạn chế đồ nhựa và tiết kiệm năng lượng có thể góp phần giảm <b>carbon footprints</b>.
+
+        Ngoài ra, khi người tiêu dùng ưu tiên các sản phẩm thân thiện với môi trường, các doanh nghiệp sẽ buộc phải thay đổi chiến lược sản xuất để đáp ứng nhu cầu thị trường. 
+        Điều này cho thấy hành vi cá nhân vẫn có thể tạo ra ảnh hưởng xã hội rộng lớn.
+
+        Tuy nhiên, các chính phủ và tập đoàn lớn mới là những tổ chức có đủ <b>financial resources</b>, <b>political authority</b> và công nghệ để giải quyết các vấn đề môi trường ở quy mô lớn. 
+        Họ có thể đầu tư vào <b>renewable energy</b>, cải thiện <b>waste management systems</b> và ban hành các <b>environmental regulations</b> nghiêm ngặt.
+
+        Hơn nữa, phần lớn lượng <b>industrial pollution</b> và <b>greenhouse gas emissions</b> đến từ các ngành công nghiệp lớn thay vì từ hoạt động cá nhân. 
+        Vì vậy, những thay đổi mang tính hệ thống thường phụ thuộc nhiều hơn vào chính sách quốc gia và trách nhiệm doanh nghiệp.
+
+        <br><br>
+
+        <b>Useful Vocabulary:</b>
+
+        <ul>
+            <li><b>daily habits</b> — thói quen hàng ngày</li>
+            <li><b>environmental impact</b> — tác động môi trường</li>
+            <li><b>public transportation</b> — phương tiện giao thông công cộng</li>
+            <li><b>carbon footprints</b> — lượng khí thải carbon cá nhân</li>
+            <li><b>financial resources</b> — nguồn lực tài chính</li>
+            <li><b>political authority</b> — quyền lực chính trị</li>
+            <li><b>renewable energy</b> — năng lượng tái tạo</li>
+            <li><b>waste management systems</b> — hệ thống xử lý rác thải</li>
+            <li><b>environmental regulations</b> — quy định môi trường</li>
+            <li><b>industrial pollution</b> — ô nhiễm công nghiệp</li>
+            <li><b>greenhouse gas emissions</b> — khí thải nhà kính</li>
+            <li><b>sustainable products</b> — sản phẩm bền vững</li>
+            <li><b>consumer behavior</b> — hành vi tiêu dùng</li>
+            <li><b>eco-friendly lifestyle</b> — lối sống thân thiện môi trường</li>
+            <li><b>environmental awareness</b> — nhận thức môi trường</li>
+        </ul>
+        `,
+
+                    logic: `
+        Logic:
+        <br>
+        Individual behavior influences society indirectly.
+        <br><br>
+        However:
+        <br>
+        Governments and corporations possess the power and resources to create large-scale environmental change.
+        `
+                },
+
+                band9: {
+                    title: "Đa chiều & Phản biện",
+
+                    content: `
+        Cuộc tranh luận về trách nhiệm bảo vệ môi trường phản ánh sự khác biệt giữa <b>individual accountability</b> và <b>systemic responsibility</b>. 
+        Một mặt, các cá nhân có thể góp phần giảm thiểu tác động môi trường thông qua <b>sustainable consumption</b>, thay đổi lối sống và nâng cao <b>environmental consciousness</b>.
+
+        Các hành động như hạn chế tiêu dùng quá mức, sử dụng năng lượng tiết kiệm và hỗ trợ các doanh nghiệp xanh có thể tạo ra áp lực xã hội buộc thị trường thay đổi. 
+        Trong nhiều trường hợp, sự thay đổi văn hóa tiêu dùng chính là động lực thúc đẩy quá trình chuyển đổi xanh.
+
+        Tuy nhiên, quy mô của các vấn đề như <b>climate change</b>, <b>deforestation</b> hay <b>biodiversity loss</b> vượt xa khả năng giải quyết của từng cá nhân riêng lẻ. 
+        Các chính phủ và tập đoàn đa quốc gia sở hữu <b>economic leverage</b>, <b>legislative power</b> và khả năng đầu tư vào <b>large-scale environmental initiatives</b>.
+
+        Ví dụ, chỉ các cơ quan nhà nước mới có thể áp đặt <b>carbon taxes</b>, kiểm soát <b>industrial emissions</b> hoặc tài trợ cho cơ sở hạ tầng năng lượng sạch. 
+        Tương tự, các tập đoàn lớn có thể tạo ra tác động tích cực hoặc tiêu cực khổng lồ thông qua chuỗi sản xuất và tiêu dùng toàn cầu.
+
+        Dù vậy, việc đổ toàn bộ trách nhiệm lên chính phủ hoặc doanh nghiệp có thể khiến xã hội trở nên thụ động. 
+        Bảo vệ môi trường hiệu quả đòi hỏi sự phối hợp giữa <b>public policy</b>, trách nhiệm doanh nghiệp và sự tham gia của cộng đồng.
+
+        Cuối cùng, mặc dù thay đổi mang tính hệ thống là yếu tố quyết định, các hành động cá nhân vẫn đóng vai trò nền tảng trong việc xây dựng một xã hội có ý thức môi trường lâu dài.
+
+        <br><br>
+
+        <b>Useful Vocabulary:</b>
+
+        <ul>
+            <li><b>individual accountability</b> — trách nhiệm cá nhân</li>
+            <li><b>systemic responsibility</b> — trách nhiệm mang tính hệ thống</li>
+            <li><b>sustainable consumption</b> — tiêu dùng bền vững</li>
+            <li><b>environmental consciousness</b> — ý thức môi trường</li>
+            <li><b>climate change</b> — biến đổi khí hậu</li>
+            <li><b>deforestation</b> — nạn phá rừng</li>
+            <li><b>biodiversity loss</b> — mất đa dạng sinh học</li>
+            <li><b>economic leverage</b> — đòn bẩy kinh tế</li>
+            <li><b>legislative power</b> — quyền lập pháp</li>
+            <li><b>large-scale environmental initiatives</b> — sáng kiến môi trường quy mô lớn</li>
+            <li><b>carbon taxes</b> — thuế carbon</li>
+            <li><b>industrial emissions</b> — khí thải công nghiệp</li>
+            <li><b>public policy</b> — chính sách công</li>
+            <li><b>corporate responsibility</b> — trách nhiệm doanh nghiệp</li>
+            <li><b>renewable infrastructure</b> — cơ sở hạ tầng năng lượng tái tạo</li>
+            <li><b>environmental sustainability</b> — tính bền vững môi trường</li>
+            <li><b>global environmental crisis</b> — khủng hoảng môi trường toàn cầu</li>
+            <li><b>collective action</b> — hành động tập thể</li>
+            <li><b>green transition</b> — quá trình chuyển đổi xanh</li>
+        </ul>
+        `,
+
+                    logic: `
+        Logic:
+        <br>
+        Individual actions raise awareness and influence consumer culture.
+        <br><br>
+        However:
+        <br>
+        Governments and corporations possess the authority, resources, and infrastructure to implement systemic environmental reforms.
+        <br><br>
+        Final evaluation:
+        <br>
+        Environmental protection is most effective when individual responsibility and institutional power work together.
+        `
+                },
+
+                summaryTable: [
+                    {
+                        label: 'Trọng tâm',
+                        b5: 'Hành động cá nhân',
+                        b7: 'Tác động xã hội & chính sách',
+                        b9: 'Trách nhiệm hệ thống'
+                    },
+
+                    {
+                        label: 'Kiểu lập luận',
+                        b5: 'Ưu & nhược điểm đơn giản',
+                        b7: 'Cause - Effect',
+                        b9: 'Phản biện đa chiều'
+                    },
+
+                    {
+                        label: 'Góc nhìn',
+                        b5: 'Cuộc sống hàng ngày',
+                        b7: 'Xã hội & doanh nghiệp',
+                        b9: 'Toàn cầu & hệ thống'
+                    },
+
+                    {
+                        label: 'Độ sâu ý tưởng',
+                        b5: 'Hành động cơ bản',
+                        b7: 'Ảnh hưởng gián tiếp',
+                        b9: 'Cải cách quy mô lớn'
+                    },
+
+                    {
+                        label: 'Từ khóa nổi bật',
+                        b5: 'Recycling, pollution',
+                        b7: 'Carbon footprints, regulations',
+                        b9: 'Systemic responsibility, collective action'
+                    }
+                ]
+            },
+            {
+                id: "topic_climate_air_travel",
+
+                topicName: "Biến đổi khí hậu & Máy bay",
+
+                subjectText: "CLIMATE CHANGE AND AIR TRAVEL",
+
+                mainTopic: {
+                    title: "Chủ đề: Có nên hạn chế đi máy bay để giảm biến đổi khí hậu?",
+
+                    content: `
+        <b>Topic:</b> To reduce climate change, individuals should limit air travel. To what extent do you agree or disagree?
+
+        <br><br>
+
+        <b>Question Analysis:</b>
+        Đây là dạng bài <b>Opinion Essay</b>, yêu cầu nêu mức độ đồng ý hoặc không đồng ý với quan điểm rằng mọi người nên hạn chế đi máy bay để giảm biến đổi khí hậu.
+
+        <br><br>
+
+        Có thể triển khai theo các hướng:
+        <ul>
+            <li>Máy bay tạo ra lượng lớn khí thải carbon</li>
+            <li>Ngành hàng không góp phần vào hiện tượng nóng lên toàn cầu</li>
+            <li>Việc giảm số chuyến bay có thể giảm ô nhiễm môi trường</li>
+            <li>Tuy nhiên, máy bay rất quan trọng đối với kinh tế và kết nối toàn cầu</li>
+            <li>Giải pháp dài hạn nên bao gồm công nghệ xanh và chính sách quốc tế</li>
+        </ul>
+
+        <b>Main Direction:</b>
+        Có thể chọn hướng “partly agree”:
+        cá nhân nên hạn chế các chuyến bay không cần thiết, nhưng trách nhiệm chính vẫn thuộc về chính phủ và ngành hàng không.
+        `,
+
+                    logic: `
+        Logic triển khai:
+        <br>
+        Air travel → Carbon emissions → Climate change
+        <br><br>
+        Limiting unnecessary flights → Reduced environmental impact
+        <br><br>
+        However:
+        <br>
+        Systemic solutions and green aviation technology are also necessary.
+        `
+                },
+
+                band5: {
+                    title: "Ý tưởng đơn giản",
+
+                    content: `
+        Máy bay tạo ra nhiều <b>carbon emissions</b> và gây ra <b>air pollution</b>. 
+        Vì vậy, một số người cho rằng mọi người nên hạn chế đi máy bay để bảo vệ môi trường.
+
+        Nếu mọi người giảm các chuyến du lịch không cần thiết, lượng khí thải có thể giảm xuống. 
+        Thay vào đó, họ có thể sử dụng <b>public transport</b> hoặc tàu hỏa cho các chuyến đi ngắn.
+
+        Ngoài ra, việc đi máy bay quá thường xuyên còn làm tăng <b>global warming</b> và ảnh hưởng đến khí hậu toàn cầu. 
+        Nhiều người hiện nay cố gắng sống theo <b>eco-friendly lifestyles</b> để giảm tác động lên môi trường.
+
+        Tuy nhiên, máy bay vẫn rất quan trọng đối với <b>international travel</b>, du lịch và kinh doanh. 
+        Một số người cần đi máy bay vì công việc hoặc để gặp gia đình ở nước ngoài.
+
+        Vì vậy, tôi đồng ý rằng mọi người nên hạn chế những chuyến bay không cần thiết, nhưng không nên dừng hoàn toàn việc đi máy bay.
+
+        <br><br>
+
+        <b>Useful Vocabulary:</b>
+
+        <ul>
+            <li><b>carbon emissions</b> — khí thải carbon</li>
+            <li><b>air pollution</b> — ô nhiễm không khí</li>
+            <li><b>public transport</b> — phương tiện công cộng</li>
+            <li><b>global warming</b> — nóng lên toàn cầu</li>
+            <li><b>eco-friendly lifestyles</b> — lối sống thân thiện môi trường</li>
+            <li><b>international travel</b> — du lịch quốc tế</li>
+            <li><b>climate change</b> — biến đổi khí hậu</li>
+            <li><b>greenhouse gases</b> — khí nhà kính</li>
+            <li><b>reduce pollution</b> — giảm ô nhiễm</li>
+            <li><b>environmental protection</b> — bảo vệ môi trường</li>
+            <li><b>air travel</b> — di chuyển bằng máy bay</li>
+            <li><b>long-distance travel</b> — du lịch đường dài</li>
+            <li><b>fuel consumption</b> — tiêu thụ nhiên liệu</li>
+            <li><b>travel habits</b> — thói quen du lịch</li>
+            <li><b>sustainable living</b> — lối sống bền vững</li>
+        </ul>
+        `,
+
+                    logic: `
+        Logic:
+        <br>
+        Máy bay gây ô nhiễm → giảm số chuyến bay → giảm tác động môi trường.
+        <br><br>
+        Tuy nhiên:
+        <br>
+        Máy bay vẫn cần thiết trong một số trường hợp.
+        `
+                },
+
+                band7: {
+                    title: "Chiều sâu & Mở rộng",
+
+                    content: `
+        Ngành hàng không là một trong những nguồn tạo ra <b>greenhouse gas emissions</b> đáng kể, đặc biệt thông qua việc đốt nhiên liệu hóa thạch trong các chuyến bay đường dài. 
+        Vì lý do này, nhiều người cho rằng việc hạn chế <b>air travel</b> là cần thiết để giảm <b>environmental impact</b> và làm chậm quá trình <b>climate change</b>.
+
+        Trên thực tế, việc giảm các chuyến bay không cần thiết, chẳng hạn như du lịch ngắn ngày hoặc công tác có thể thay thế bằng họp trực tuyến, có thể giúp giảm đáng kể <b>carbon footprints</b>. 
+        Điều này cũng góp phần nâng cao <b>environmental awareness</b> và khuyến khích mọi người xây dựng lối sống bền vững hơn.
+
+        Tuy nhiên, việc yêu cầu mọi cá nhân hạn chế đi máy bay hoàn toàn là không thực tế. 
+        Hàng không đóng vai trò quan trọng trong <b>global trade</b>, du lịch quốc tế và kết nối kinh tế giữa các quốc gia.
+
+        Ngoài ra, trách nhiệm giảm khí thải không nên chỉ đặt lên vai cá nhân mà còn cần sự tham gia của chính phủ và các công ty hàng không. 
+        Các giải pháp như phát triển <b>sustainable aviation fuel</b>, đầu tư vào <b>green technology</b> và cải thiện hiệu quả vận hành máy bay có thể tạo ra tác động lớn hơn về lâu dài.
+
+        <br><br>
+
+        <b>Useful Vocabulary:</b>
+
+        <ul>
+            <li><b>greenhouse gas emissions</b> — khí thải nhà kính</li>
+            <li><b>environmental impact</b> — tác động môi trường</li>
+            <li><b>climate change</b> — biến đổi khí hậu</li>
+            <li><b>carbon footprints</b> — lượng khí thải carbon cá nhân</li>
+            <li><b>environmental awareness</b> — nhận thức môi trường</li>
+            <li><b>global trade</b> — thương mại toàn cầu</li>
+            <li><b>sustainable aviation fuel</b> — nhiên liệu hàng không bền vững</li>
+            <li><b>green technology</b> — công nghệ xanh</li>
+            <li><b>fossil fuels</b> — nhiên liệu hóa thạch</li>
+            <li><b>international tourism</b> — du lịch quốc tế</li>
+            <li><b>online meetings</b> — họp trực tuyến</li>
+            <li><b>energy efficiency</b> — hiệu quả năng lượng</li>
+            <li><b>long-haul flights</b> — chuyến bay đường dài</li>
+            <li><b>aviation industry</b> — ngành hàng không</li>
+            <li><b>sustainable development</b> — phát triển bền vững</li>
+        </ul>
+        `,
+
+                    logic: `
+        Logic:
+        <br>
+        Air travel contributes significantly to climate change.
+        <br><br>
+        Therefore:
+        <br>
+        Reducing unnecessary flights can lower carbon emissions.
+        <br><br>
+        However:
+        <br>
+        Long-term solutions require technological innovation and government policies.
+        `
+                },
+
+                band9: {
+                    title: "Đa chiều & Phản biện",
+
+                    content: `
+        Không thể phủ nhận rằng ngành hàng không đóng góp đáng kể vào <b>global carbon emissions</b> thông qua việc tiêu thụ khối lượng lớn <b>fossil fuels</b>. 
+        Trong bối cảnh cuộc khủng hoảng <b>climate change</b> ngày càng nghiêm trọng, nhiều người cho rằng các cá nhân nên hạn chế đi máy bay như một phần của <b>sustainable living</b>.
+
+        Từ góc độ môi trường, việc giảm các chuyến bay không cần thiết có thể giúp cắt giảm <b>aviation-related emissions</b> và giảm áp lực lên hệ sinh thái toàn cầu. 
+        Đặc biệt, các chuyến bay đường dài thường tạo ra lượng khí thải rất lớn trên mỗi hành khách so với nhiều hình thức vận chuyển khác.
+
+        Hơn nữa, việc thay đổi <b>consumer behavior</b> có thể tạo ra áp lực buộc ngành hàng không phải đầu tư mạnh hơn vào <b>low-carbon technologies</b>, <b>sustainable aviation fuel</b> và các mô hình vận hành thân thiện với môi trường.
+
+        Tuy nhiên, việc tập trung hoàn toàn vào trách nhiệm cá nhân có thể làm đơn giản hóa một vấn đề mang tính hệ thống. 
+        Ngành hàng không toàn cầu tồn tại vì nhu cầu kinh tế, thương mại và di chuyển quốc tế của xã hội hiện đại. 
+        Trong nhiều trường hợp, cá nhân gần như không có lựa chọn thay thế phù hợp cho các chuyến đi quốc tế hoặc công việc chuyên môn.
+
+        Ngoài ra, tác động của một cá nhân riêng lẻ thường nhỏ hơn rất nhiều so với lượng khí thải được tạo ra bởi các tập đoàn công nghiệp hoặc hệ thống giao thông toàn cầu. 
+        Vì vậy, các giải pháp hiệu quả hơn cần đến <b>international environmental policies</b>, đầu tư vào <b>renewable energy infrastructure</b> và cải cách toàn diện ngành vận tải.
+
+        Xét tổng thể, tôi đồng ý rằng mọi người nên hạn chế các chuyến bay không cần thiết để nâng cao ý thức môi trường. 
+        Tuy nhiên, trách nhiệm chính trong việc giảm biến đổi khí hậu vẫn nên thuộc về các chính phủ, tổ chức quốc tế và ngành hàng không toàn cầu.
+
+        <br><br>
+
+        <b>Useful Vocabulary:</b>
+
+        <ul>
+            <li><b>global carbon emissions</b> — khí thải carbon toàn cầu</li>
+            <li><b>fossil fuels</b> — nhiên liệu hóa thạch</li>
+            <li><b>climate change</b> — biến đổi khí hậu</li>
+            <li><b>sustainable living</b> — lối sống bền vững</li>
+            <li><b>aviation-related emissions</b> — khí thải liên quan đến hàng không</li>
+            <li><b>consumer behavior</b> — hành vi tiêu dùng</li>
+            <li><b>low-carbon technologies</b> — công nghệ ít carbon</li>
+            <li><b>sustainable aviation fuel</b> — nhiên liệu hàng không bền vững</li>
+            <li><b>international environmental policies</b> — chính sách môi trường quốc tế</li>
+            <li><b>renewable energy infrastructure</b> — cơ sở hạ tầng năng lượng tái tạo</li>
+            <li><b>systemic issue</b> — vấn đề mang tính hệ thống</li>
+            <li><b>environmental responsibility</b> — trách nhiệm môi trường</li>
+            <li><b>carbon-intensive industries</b> — ngành công nghiệp thải nhiều carbon</li>
+            <li><b>ecological sustainability</b> — tính bền vững sinh thái</li>
+            <li><b>global transportation systems</b> — hệ thống giao thông toàn cầu</li>
+            <li><b>long-term environmental strategy</b> — chiến lược môi trường dài hạn</li>
+            <li><b>climate crisis</b> — khủng hoảng khí hậu</li>
+            <li><b>collective responsibility</b> — trách nhiệm tập thể</li>
+            <li><b>green transition</b> — quá trình chuyển đổi xanh</li>
+        </ul>
+        `,
+
+                    logic: `
+        Logic:
+        <br>
+        Air travel significantly contributes to carbon emissions.
+        <br><br>
+        Therefore:
+        <br>
+        Individuals should reduce unnecessary flights to lower environmental impact.
+        <br><br>
+        However:
+        <br>
+        Climate change is fundamentally a systemic issue requiring international policy, technological innovation, and industrial reform.
+        <br><br>
+        Final evaluation:
+        <br>
+        Individual action is important for awareness, but large-scale institutional change remains more decisive.
+        `
+                },
+
+                summaryTable: [
+                    {
+                        label: 'Trọng tâm',
+                        b5: 'Ô nhiễm từ máy bay',
+                        b7: 'Khí thải & giải pháp',
+                        b9: 'Trách nhiệm hệ thống'
+                    },
+
+                    {
+                        label: 'Kiểu lập luận',
+                        b5: 'Đồng ý một phần',
+                        b7: 'Cause - Effect',
+                        b9: 'Đa chiều & phản biện'
+                    },
+
+                    {
+                        label: 'Góc nhìn',
+                        b5: 'Cá nhân',
+                        b7: 'Môi trường & xã hội',
+                        b9: 'Toàn cầu & chính sách'
+                    },
+
+                    {
+                        label: 'Độ sâu ý tưởng',
+                        b5: 'Tác động trực tiếp',
+                        b7: 'Giải pháp công nghệ',
+                        b9: 'Cải cách toàn hệ thống'
+                    },
+
+                    {
+                        label: 'Từ khóa nổi bật',
+                        b5: 'Air pollution, global warming',
+                        b7: 'Carbon footprints, sustainable aviation fuel',
+                        b9: 'Systemic issue, climate crisis'
+                    }
+                ]
+            },
+            {
+                id: "topic_human_instinct_social_conditioning",
+
+                topicName: "Bản năng con người & Định kiến xã hội",
+
+                subjectText: "HUMAN NATURE AND SOCIETY",
+
+                mainTopic: {
+                    title: "Chủ đề: Bản năng tự nhiên hay xã hội định hình con người?",
+
+                    content: `
+        <b>Topic:</b> Some people believe that human behavior is mainly driven by natural instincts, while others argue that society and social conditioning shape the way people think and behave.
+
+        <br><br>
+
+        <b>Question Analysis:</b>
+        Đề yêu cầu phân tích hai yếu tố ảnh hưởng đến hành vi con người:
+        <ul>
+            <li>Bản năng tự nhiên như sinh tồn, cảm xúc, cạnh tranh và ham muốn</li>
+            <li>Ảnh hưởng của giáo dục, văn hóa và chuẩn mực xã hội</li>
+            <li>Cách xã hội định hình suy nghĩ, giá trị và hành vi</li>
+            <li>Xung đột giữa mong muốn cá nhân và kỳ vọng xã hội</li>
+            <li>Vai trò của gia đình, truyền thông và môi trường sống</li>
+        </ul>
+
+        <b>Main Direction:</b>
+        Phân tích rằng con người có những bản năng tự nhiên bẩm sinh, nhưng xã hội đóng vai trò rất lớn trong việc kiểm soát, định hướng và định hình hành vi đó.
+        `,
+
+                    logic: `
+        Logic triển khai:
+        <br>
+        Human instinct → Natural desires and emotions
+        <br><br>
+        Society and culture → Rules, expectations, and behavior control
+        <br><br>
+        Final idea:
+        <br>
+        Human behavior is shaped by the interaction between biology and social conditioning.
+        `
+                },
+
+                band5: {
+                    title: "Ý tưởng đơn giản",
+
+                    content: `
+        Một số người cho rằng hành vi con người đến từ <b>natural instincts</b> như cảm xúc, sự tức giận hoặc mong muốn thành công. 
+        Ví dụ, con người thường muốn được yêu thương, an toàn và có cuộc sống tốt hơn.
+
+        Ngoài ra, nhiều người cạnh tranh với người khác vì bản năng sinh tồn và mong muốn chiến thắng. 
+        Những cảm xúc như <b>fear</b>, <b>love</b> và <b>jealousy</b> xuất hiện tự nhiên ở hầu hết mọi người.
+
+        Tuy nhiên, xã hội cũng ảnh hưởng mạnh đến cách con người suy nghĩ và hành xử. 
+        Từ nhỏ, trẻ em được dạy về <b>social rules</b>, cách cư xử và những điều đúng sai.
+
+        Gia đình, trường học và <b>social media</b> đều có thể tạo ra <b>social pressure</b> khiến mọi người hành động theo kỳ vọng của xã hội. 
+        Nhiều người thay đổi cách ăn mặc, nói chuyện hoặc lựa chọn nghề nghiệp để được xã hội chấp nhận.
+
+        <br><br>
+
+        <b>Useful Vocabulary:</b>
+
+        <ul>
+            <li><b>natural instincts</b> — bản năng tự nhiên</li>
+            <li><b>human behavior</b> — hành vi con người</li>
+            <li><b>fear</b> — nỗi sợ</li>
+            <li><b>love</b> — tình yêu</li>
+            <li><b>jealousy</b> — sự ghen tị</li>
+            <li><b>social rules</b> — quy tắc xã hội</li>
+            <li><b>social media</b> — mạng xã hội</li>
+            <li><b>social pressure</b> — áp lực xã hội</li>
+            <li><b>family influence</b> — ảnh hưởng gia đình</li>
+            <li><b>traditional values</b> — giá trị truyền thống</li>
+            <li><b>personal choices</b> — lựa chọn cá nhân</li>
+            <li><b>social expectations</b> — kỳ vọng xã hội</li>
+            <li><b>emotions</b> — cảm xúc</li>
+            <li><b>competition</b> — sự cạnh tranh</li>
+            <li><b>success</b> — thành công</li>
+        </ul>
+        `,
+
+                    logic: `
+        Logic:
+        <br>
+        Con người có cảm xúc và bản năng tự nhiên.
+        <br><br>
+        Tuy nhiên:
+        <br>
+        Xã hội cũng dạy con người cách suy nghĩ và hành động.
+        `
+                },
+
+                band7: {
+                    title: "Chiều sâu & Mở rộng",
+
+                    content: `
+        Nhiều nhà tâm lý học cho rằng hành vi con người phần lớn bắt nguồn từ <b>biological instincts</b> và các nhu cầu cơ bản như sinh tồn, tình cảm và sự công nhận xã hội. 
+        Những phản ứng như sợ hãi, cạnh tranh hoặc bảo vệ bản thân thường xuất hiện một cách tự nhiên mà không cần được dạy.
+
+        Tuy nhiên, xã hội đóng vai trò quan trọng trong việc kiểm soát và định hướng những bản năng đó thông qua <b>social conditioning</b>, giáo dục và các chuẩn mực văn hóa. 
+        Từ nhỏ, con người đã bị ảnh hưởng bởi <b>cultural expectations</b>, <b>gender roles</b> và các giá trị cộng đồng.
+
+        Ngoài ra, các tổ chức như gia đình, trường học và truyền thông thường tạo ra <b>behavioral norms</b> nhằm duy trì trật tự xã hội. 
+        Điều này giải thích tại sao hành vi của con người có thể khác nhau đáng kể giữa các nền văn hóa.
+
+        Trong nhiều trường hợp, con người phải đấu tranh giữa <b>personal desires</b> và áp lực phải tuân theo các tiêu chuẩn xã hội. 
+        Ví dụ, nhiều người lựa chọn nghề nghiệp hoặc phong cách sống không phải vì họ thực sự muốn, mà vì mong muốn được xã hội công nhận.
+
+        <br><br>
+
+        <b>Useful Vocabulary:</b>
+
+        <ul>
+            <li><b>biological instincts</b> — bản năng sinh học</li>
+            <li><b>social conditioning</b> — sự định hình xã hội</li>
+            <li><b>cultural expectations</b> — kỳ vọng văn hóa</li>
+            <li><b>gender roles</b> — vai trò giới tính</li>
+            <li><b>behavioral norms</b> — chuẩn mực hành vi</li>
+            <li><b>personal desires</b> — mong muốn cá nhân</li>
+            <li><b>social acceptance</b> — sự chấp nhận xã hội</li>
+            <li><b>cultural values</b> — giá trị văn hóa</li>
+            <li><b>psychological influence</b> — ảnh hưởng tâm lý</li>
+            <li><b>social identity</b> — bản sắc xã hội</li>
+            <li><b>peer pressure</b> — áp lực bạn bè</li>
+            <li><b>social conformity</b> — sự tuân theo xã hội</li>
+            <li><b>moral values</b> — giá trị đạo đức</li>
+            <li><b>human psychology</b> — tâm lý con người</li>
+            <li><b>self-expression</b> — sự thể hiện bản thân</li>
+        </ul>
+        `,
+
+                    logic: `
+        Logic:
+        <br>
+        Humans possess natural instincts.
+        <br><br>
+        However:
+        <br>
+        Social systems shape how these instincts are expressed and controlled.
+        `
+                },
+
+                band9: {
+                    title: "Đa chiều & Phản biện",
+
+                    content: `
+        Cuộc tranh luận giữa <b>human instinct</b> và <b>social conditioning</b> phản ánh một trong những câu hỏi nền tảng của tâm lý học và xã hội học hiện đại: liệu con người được quyết định bởi bản chất sinh học hay bởi môi trường xã hội.
+
+        Từ góc độ sinh học, con người sở hữu nhiều <b>evolutionary instincts</b> liên quan đến sinh tồn, cạnh tranh và tái tạo nòi giống. 
+        Những phản ứng như sợ hãi, ham muốn quyền lực hoặc nhu cầu được công nhận thường xuất hiện xuyên văn hóa và có thể được xem là một phần của <b>human nature</b>.
+
+        Tuy nhiên, các nhà xã hội học cho rằng hành vi con người phần lớn được định hình bởi <b>social structures</b>, <b>cultural narratives</b> và quá trình <b>behavioral conditioning</b>. 
+        Các chuẩn mực xã hội không chỉ kiểm soát hành vi mà còn ảnh hưởng đến cách con người nhìn nhận bản thân, giới tính, thành công và đạo đức.
+
+        Ví dụ, nhiều người che giấu cảm xúc thật hoặc từ bỏ mong muốn cá nhân để phù hợp với <b>societal expectations</b>. 
+        Trong nhiều nền văn hóa, áp lực phải thành công về tài chính hoặc tuân theo vai trò giới truyền thống có thể dẫn đến <b>identity conflicts</b> và căng thẳng tâm lý.
+
+        Hơn nữa, truyền thông hiện đại và mạng xã hội đã mở rộng mức độ ảnh hưởng của <b>collective social influence</b>, khiến con người ngày càng bị tác động bởi hình ảnh lý tưởng do xã hội tạo ra. 
+        Điều này cho thấy ngay cả những mong muốn tưởng chừng “tự nhiên” đôi khi cũng là sản phẩm của môi trường văn hóa.
+
+        Dù vậy, sẽ là cực đoan nếu cho rằng con người hoàn toàn bị kiểm soát bởi xã hội. 
+        Các bản năng sinh học vẫn đóng vai trò nền tảng trong cảm xúc, động lực và phản ứng tự nhiên của con người.
+
+        Xét tổng thể, hành vi con người nên được nhìn nhận như kết quả của sự tương tác liên tục giữa bản năng tự nhiên và các lực lượng xã hội. 
+        Chính sự xung đột giữa hai yếu tố này tạo nên tính phức tạp của tâm lý và hành vi con người hiện đại.
+
+        <br><br>
+
+        <b>Useful Vocabulary:</b>
+
+        <ul>
+            <li><b>human instinct</b> — bản năng con người</li>
+            <li><b>social conditioning</b> — sự định hình xã hội</li>
+            <li><b>evolutionary instincts</b> — bản năng tiến hóa</li>
+            <li><b>human nature</b> — bản chất con người</li>
+            <li><b>social structures</b> — cấu trúc xã hội</li>
+            <li><b>cultural narratives</b> — hệ tư tưởng/văn hóa xã hội</li>
+            <li><b>behavioral conditioning</b> — sự điều kiện hóa hành vi</li>
+            <li><b>societal expectations</b> — kỳ vọng xã hội</li>
+            <li><b>identity conflicts</b> — xung đột bản sắc cá nhân</li>
+            <li><b>collective social influence</b> — ảnh hưởng xã hội tập thể</li>
+            <li><b>psychological tension</b> — căng thẳng tâm lý</li>
+            <li><b>social conformity</b> — sự tuân thủ xã hội</li>
+            <li><b>individual autonomy</b> — quyền tự chủ cá nhân</li>
+            <li><b>cultural conditioning</b> — sự định hình văn hóa</li>
+            <li><b>emotional suppression</b> — sự kìm nén cảm xúc</li>
+            <li><b>social identity</b> — bản sắc xã hội</li>
+            <li><b>human consciousness</b> — ý thức con người</li>
+            <li><b>moral framework</b> — hệ thống đạo đức</li>
+            <li><b>behavioral psychology</b> — tâm lý học hành vi</li>
+        </ul>
+        `,
+
+                    logic: `
+        Logic:
+        <br>
+        Humans possess innate biological instincts.
+        <br><br>
+        However:
+        <br>
+        Social conditioning shapes how these instincts are interpreted, controlled, and expressed.
+        <br><br>
+        Final evaluation:
+        <br>
+        Human behavior emerges from the interaction between biology, psychology, and social influence.
+        `
+                },
+
+                summaryTable: [
+                    {
+                        label: 'Trọng tâm',
+                        b5: 'Cảm xúc & xã hội',
+                        b7: 'Ảnh hưởng văn hóa',
+                        b9: 'Tâm lý & xã hội học'
+                    },
+
+                    {
+                        label: 'Kiểu lập luận',
+                        b5: 'So sánh đơn giản',
+                        b7: 'Cause - Effect',
+                        b9: 'Phân tích đa chiều'
+                    },
+
+                    {
+                        label: 'Góc nhìn',
+                        b5: 'Cá nhân',
+                        b7: 'Xã hội & văn hóa',
+                        b9: 'Triết học & tâm lý học'
+                    },
+
+                    {
+                        label: 'Độ sâu ý tưởng',
+                        b5: 'Bản năng cơ bản',
+                        b7: 'Kiểm soát xã hội',
+                        b9: 'Xung đột giữa bản năng và cấu trúc xã hội'
+                    },
+
+                    {
+                        label: 'Từ khóa nổi bật',
+                        b5: 'Natural instincts, emotions',
+                        b7: 'Social conditioning, conformity',
+                        b9: 'Behavioral psychology, identity conflicts'
+                    }
+                ]
+            },
+            {
+                id: "topic_gender_roles_expectations",
+
+                topicName: "Vai trò giới & Kỳ vọng xã hội",
+
+                subjectText: "GENDER AND SOCIAL EXPECTATIONS",
+
+                mainTopic: {
+                    title: "Chủ đề: Vai trò giới là bản năng tự nhiên hay sản phẩm của xã hội?",
+
+                    content: `
+        <b>Topic:</b> Some people believe that gender roles are based on natural differences between men and women, while others argue that they are mainly social stereotypes created by society from childhood.
+
+        <br><br>
+
+        <b>Question Analysis:</b>
+        Đề yêu cầu phân tích hai quan điểm:
+        <ul>
+            <li>Sự khác biệt giới tính xuất phát từ bản năng sinh học tự nhiên</li>
+            <li>Vai trò giới phần lớn được hình thành bởi giáo dục và văn hóa</li>
+            <li>Ảnh hưởng của gia đình, trường học và truyền thông</li>
+            <li>Các định kiến như “đàn ông mạnh mẽ”, “phụ nữ dịu dàng”</li>
+            <li>Tác động của kỳ vọng xã hội lên lựa chọn nghề nghiệp và tính cách</li>
+        </ul>
+
+        <b>Main Direction:</b>
+        Phân tích rằng dù có một số khác biệt sinh học tự nhiên giữa nam và nữ, phần lớn vai trò giới và kỳ vọng xã hội được củng cố thông qua quá trình giáo dục và định hình văn hóa từ nhỏ.
+        `,
+
+                    logic: `
+        Logic triển khai:
+        <br>
+        Biological differences → Some natural tendencies
+        <br><br>
+        Social conditioning → Gender expectations and stereotypes
+        <br><br>
+        Final idea:
+        <br>
+        Gender roles are influenced by both biology and social construction, but society plays a major role in reinforcing them.
+        `
+                },
+
+                band5: {
+                    title: "Ý tưởng đơn giản",
+
+                    content: `
+        Nhiều người cho rằng nam và nữ có những khác biệt tự nhiên về tính cách và hành vi. 
+        Ví dụ, đàn ông thường được xem là mạnh mẽ và thích <b>competition</b>, trong khi phụ nữ được cho là dịu dàng và quan tâm đến gia đình hơn.
+
+        Tuy nhiên, nhiều vai trò giới thực chất đến từ <b>social stereotypes</b>. 
+        Từ nhỏ, trẻ em đã được dạy rằng con trai nên chơi xe hoặc thể thao, còn con gái nên chơi búp bê hoặc học nấu ăn.
+
+        Ngoài ra, <b>parents</b>, trường học và <b>media</b> cũng ảnh hưởng mạnh đến cách trẻ nhìn nhận giới tính. 
+        Điều này khiến nhiều người cảm thấy áp lực phải hành động theo <b>social expectations</b>.
+
+        Ví dụ, một số nam giới bị chê cười nếu thể hiện cảm xúc, trong khi phụ nữ thường bị đánh giá nếu quá mạnh mẽ hoặc tham vọng. 
+        Điều đó cho thấy xã hội có ảnh hưởng lớn đến vai trò giới.
+
+        <br><br>
+
+        <b>Useful Vocabulary:</b>
+
+        <ul>
+            <li><b>competition</b> — sự cạnh tranh</li>
+            <li><b>social stereotypes</b> — định kiến xã hội</li>
+            <li><b>parents</b> — cha mẹ</li>
+            <li><b>media</b> — truyền thông</li>
+            <li><b>social expectations</b> — kỳ vọng xã hội</li>
+            <li><b>gender roles</b> — vai trò giới</li>
+            <li><b>traditional beliefs</b> — niềm tin truyền thống</li>
+            <li><b>masculine</b> — nam tính</li>
+            <li><b>feminine</b> — nữ tính</li>
+            <li><b>childhood education</b> — giáo dục từ nhỏ</li>
+            <li><b>social pressure</b> — áp lực xã hội</li>
+            <li><b>emotions</b> — cảm xúc</li>
+            <li><b>career choices</b> — lựa chọn nghề nghiệp</li>
+            <li><b>family responsibilities</b> — trách nhiệm gia đình</li>
+            <li><b>gender differences</b> — sự khác biệt giới tính</li>
+        </ul>
+        `,
+
+                    logic: `
+        Logic:
+        <br>
+        Nam và nữ có vài khác biệt tự nhiên.
+        <br><br>
+        Tuy nhiên:
+        <br>
+        Xã hội dạy trẻ em cách cư xử theo giới tính từ nhỏ.
+        `
+                },
+
+                band7: {
+                    title: "Chiều sâu & Mở rộng",
+
+                    content: `
+        Một số nhà nghiên cứu cho rằng <b>biological differences</b> giữa nam và nữ có ảnh hưởng nhất định đến hành vi và sở thích cá nhân. 
+        Ví dụ, nam giới thường được cho là có xu hướng cạnh tranh cao hơn, trong khi phụ nữ thường thể hiện khả năng chăm sóc và đồng cảm tốt hơn.
+
+        Tuy nhiên, nhiều vai trò giới hiện đại thực chất được củng cố thông qua <b>social conditioning</b> và các <b>cultural expectations</b>. 
+        Từ nhỏ, trẻ em đã tiếp xúc với các thông điệp xã hội về việc “con trai nên mạnh mẽ” hay “con gái nên dịu dàng”.
+
+        Ngoài ra, <b>gender stereotypes</b> còn được duy trì thông qua gia đình, trường học, phim ảnh và mạng xã hội. 
+        Điều này có thể ảnh hưởng mạnh đến <b>self-identity</b>, sự tự tin và cả lựa chọn nghề nghiệp của mỗi người.
+
+        Trong nhiều trường hợp, áp lực phải tuân theo <b>traditional gender roles</b> có thể giới hạn tiềm năng cá nhân. 
+        Ví dụ, đàn ông thường bị kỳ vọng phải thành công về tài chính, trong khi phụ nữ có thể bị áp lực ưu tiên gia đình hơn sự nghiệp.
+
+        Vì vậy, mặc dù sinh học có vai trò nhất định, xã hội vẫn là yếu tố chính định hình kỳ vọng giới trong cuộc sống hiện đại.
+
+        <br><br>
+
+        <b>Useful Vocabulary:</b>
+
+        <ul>
+            <li><b>biological differences</b> — khác biệt sinh học</li>
+            <li><b>social conditioning</b> — sự định hình xã hội</li>
+            <li><b>cultural expectations</b> — kỳ vọng văn hóa</li>
+            <li><b>gender stereotypes</b> — định kiến giới</li>
+            <li><b>self-identity</b> — bản sắc cá nhân</li>
+            <li><b>traditional gender roles</b> — vai trò giới truyền thống</li>
+            <li><b>social influence</b> — ảnh hưởng xã hội</li>
+            <li><b>behavioral expectations</b> — kỳ vọng hành vi</li>
+            <li><b>social norms</b> — chuẩn mực xã hội</li>
+            <li><b>career opportunities</b> — cơ hội nghề nghiệp</li>
+            <li><b>emotional expression</b> — sự thể hiện cảm xúc</li>
+            <li><b>gender equality</b> — bình đẳng giới</li>
+            <li><b>social conformity</b> — sự tuân thủ xã hội</li>
+            <li><b>psychological pressure</b> — áp lực tâm lý</li>
+            <li><b>cultural influence</b> — ảnh hưởng văn hóa</li>
+        </ul>
+        `,
+
+                    logic: `
+        Logic:
+        <br>
+        Biological factors may influence behavior.
+        <br><br>
+        However:
+        <br>
+        Society reinforces gender expectations through education, media, and culture.
+        `
+                },
+
+                band9: {
+                    title: "Đa chiều & Phản biện",
+
+                    content: `
+        Cuộc tranh luận về <b>gender roles</b> phản ánh sự xung đột giữa quan điểm sinh học và quan điểm xã hội học về hành vi con người. 
+        Một số người tin rằng nam và nữ sở hữu những <b>innate biological traits</b> khác nhau do tiến hóa, từ đó dẫn đến sự khác biệt về tính cách, cảm xúc và vai trò xã hội.
+
+        Ví dụ, nam giới thường được liên hệ với tính cạnh tranh, khả năng lãnh đạo và xu hướng chấp nhận rủi ro, trong khi phụ nữ thường được xem là giàu sự đồng cảm và có xu hướng chăm sóc người khác nhiều hơn. 
+        Những khác biệt này đôi khi được giải thích bằng <b>evolutionary psychology</b> và hormone sinh học.
+
+        Tuy nhiên, nhiều nhà xã hội học lập luận rằng phần lớn các vai trò giới thực chất là sản phẩm của <b>social construction</b> và <b>cultural conditioning</b>. 
+        Ngay từ nhỏ, trẻ em đã bị bao quanh bởi các thông điệp xã hội về việc họ “nên” cư xử như thế nào dựa trên giới tính.
+
+        Các hệ thống giáo dục, truyền thông và gia đình thường củng cố những <b>gender expectations</b> này thông qua phim ảnh, đồ chơi, thời trang và cả cách giao tiếp hàng ngày. 
+        Điều này dẫn đến hiện tượng <b>gender conformity</b>, nơi con người điều chỉnh hành vi để phù hợp với chuẩn mực xã hội thay vì mong muốn thật sự của bản thân.
+
+        Hơn nữa, các khuôn mẫu giới có thể tạo ra <b>psychological limitations</b> và bất bình đẳng trong xã hội hiện đại. 
+        Nam giới thường bị kỳ vọng phải kìm nén cảm xúc để thể hiện sự mạnh mẽ, trong khi phụ nữ có thể bị đánh giá tiêu cực nếu quá tham vọng hoặc độc lập.
+
+        Đáng chú ý, vai trò giới thay đổi đáng kể giữa các nền văn hóa và thời kỳ lịch sử khác nhau. 
+        Điều này cho thấy nhiều “bản năng giới tính” thực chất có thể chỉ là các chuẩn mực xã hội được lặp lại qua nhiều thế hệ.
+
+        Xét tổng thể, mặc dù yếu tố sinh học có thể ảnh hưởng một phần đến hành vi con người, phần lớn kỳ vọng giới trong xã hội hiện đại dường như được tạo ra và duy trì bởi các cấu trúc văn hóa và xã hội.
+
+        <br><br>
+
+        <b>Useful Vocabulary:</b>
+
+        <ul>
+            <li><b>gender roles</b> — vai trò giới</li>
+            <li><b>innate biological traits</b> — đặc điểm sinh học bẩm sinh</li>
+            <li><b>evolutionary psychology</b> — tâm lý học tiến hóa</li>
+            <li><b>social construction</b> — sự kiến tạo xã hội</li>
+            <li><b>cultural conditioning</b> — sự định hình văn hóa</li>
+            <li><b>gender expectations</b> — kỳ vọng giới</li>
+            <li><b>gender conformity</b> — sự tuân theo chuẩn giới</li>
+            <li><b>psychological limitations</b> — giới hạn tâm lý</li>
+            <li><b>social norms</b> — chuẩn mực xã hội</li>
+            <li><b>behavioral stereotypes</b> — khuôn mẫu hành vi</li>
+            <li><b>masculinity</b> — tính nam</li>
+            <li><b>femininity</b> — tính nữ</li>
+            <li><b>social expectations</b> — kỳ vọng xã hội</li>
+            <li><b>identity formation</b> — quá trình hình thành bản sắc</li>
+            <li><b>cultural narratives</b> — hệ tư tưởng văn hóa</li>
+            <li><b>gender inequality</b> — bất bình đẳng giới</li>
+            <li><b>behavioral conditioning</b> — điều kiện hóa hành vi</li>
+            <li><b>individual autonomy</b> — quyền tự chủ cá nhân</li>
+            <li><b>societal pressure</b> — áp lực xã hội</li>
+        </ul>
+        `,
+
+                    logic: `
+        Logic:
+        <br>
+        Biological differences may create certain natural tendencies.
+        <br><br>
+        However:
+        <br>
+        Social institutions and cultural conditioning strongly shape gender expectations and behavior.
+        <br><br>
+        Final evaluation:
+        <br>
+        Many gender roles commonly viewed as “natural” are heavily influenced by social and cultural reinforcement.
+        `
+                },
+
+                summaryTable: [
+                    {
+                        label: 'Trọng tâm',
+                        b5: 'Định kiến giới',
+                        b7: 'Ảnh hưởng văn hóa',
+                        b9: 'Sinh học vs xã hội'
+                    },
+
+                    {
+                        label: 'Kiểu lập luận',
+                        b5: 'So sánh đơn giản',
+                        b7: 'Cause - Effect',
+                        b9: 'Đa chiều & phản biện'
+                    },
+
+                    {
+                        label: 'Góc nhìn',
+                        b5: 'Gia đình & trường học',
+                        b7: 'Xã hội & truyền thông',
+                        b9: 'Tâm lý học & xã hội học'
+                    },
+
+                    {
+                        label: 'Độ sâu ý tưởng',
+                        b5: 'Khuôn mẫu cơ bản',
+                        b7: 'Định hình hành vi',
+                        b9: 'Kiến tạo xã hội & bản sắc'
+                    },
+
+                    {
+                        label: 'Từ khóa nổi bật',
+                        b5: 'Gender roles, stereotypes',
+                        b7: 'Social conditioning, conformity',
+                        b9: 'Social construction, evolutionary psychology'
+                    }
+                ]
+            },
+            {
+                id: "topic_sovereign_ai_digital_colonialism",
+
+                topicName: "AI Chủ quyền & Thực dân số",
+
+                subjectText: "SOVEREIGN AI AND DIGITAL COLONIALISM",
+
+                mainTopic: {
+                    title: "Chủ đề: Sovereign AI & Digital Colonialism",
+
+                    content: `
+        <b>Topic:</b> In 2026, the rise of "Sovereign AI" has become a global priority. Nations are developing their own large language models to prevent "digital colonialism"—a situation where a few tech giants control the world's data and cultural narratives. This movement aims to ensure that AI systems reflect local values, languages, and legal frameworks rather than a unified Western perspective.
+
+        <br><br>
+
+        <b>Question Analysis:</b>
+        Chủ đề tập trung vào:
+        <ul>
+            <li>Khái niệm <b>Sovereign AI</b> (AI chủ quyền quốc gia)</li>
+            <li>Nguy cơ bị phụ thuộc vào các tập đoàn công nghệ toàn cầu</li>
+            <li>AI có thể ảnh hưởng đến ngôn ngữ, văn hóa và tư duy xã hội</li>
+            <li>Sự thống trị dữ liệu và narrative của phương Tây</li>
+            <li>Nỗ lực phát triển AI phản ánh giá trị địa phương</li>
+            <li>Cân bằng giữa toàn cầu hóa công nghệ và bản sắc văn hóa</li>
+        </ul>
+
+        <b>Main Direction:</b>
+        Phân tích rằng Sovereign AI không chỉ là vấn đề công nghệ mà còn liên quan đến quyền lực văn hóa, an ninh dữ liệu và quyền tự chủ quốc gia trong kỷ nguyên AI.
+        `,
+
+                    logic: `
+        Logic triển khai:
+        <br>
+        Global AI dominance → Cultural and data dependence
+        <br><br>
+        Sovereign AI → Local control over language, values, and regulations
+        <br><br>
+        Final idea:
+        <br>
+        Sovereign AI represents a struggle for digital independence and cultural preservation in the AI era.
+        `
+                },
+
+                band5: {
+                    title: "Ý tưởng đơn giản",
+
+                    content: `
+        Nhiều quốc gia hiện nay muốn phát triển <b>national AI systems</b> để giảm sự phụ thuộc vào các công ty công nghệ lớn. 
+        Họ lo ngại rằng AI của nước ngoài có thể không hiểu ngôn ngữ, văn hóa hoặc giá trị địa phương.
+
+        Một số người cho rằng các tập đoàn công nghệ toàn cầu đang kiểm soát quá nhiều <b>user data</b> và thông tin trên Internet. 
+        Điều này có thể ảnh hưởng đến cách mọi người suy nghĩ và tiếp cận thông tin.
+
+        Vì vậy, nhiều quốc gia muốn xây dựng <b>local language models</b> để bảo vệ <b>cultural identity</b> và luật pháp quốc gia. 
+        Ví dụ, AI nên hiểu lịch sử, văn hóa và phong cách giao tiếp của từng nước.
+
+        Tuy nhiên, việc phát triển AI riêng cần rất nhiều tiền, dữ liệu và chuyên gia công nghệ. 
+        Các nước nhỏ có thể gặp khó khăn khi cạnh tranh với những công ty AI lớn trên thế giới.
+
+        <br><br>
+
+        <b>Useful Vocabulary:</b>
+
+        <ul>
+            <li><b>national AI systems</b> — hệ thống AI quốc gia</li>
+            <li><b>user data</b> — dữ liệu người dùng</li>
+            <li><b>local language models</b> — mô hình ngôn ngữ địa phương</li>
+            <li><b>cultural identity</b> — bản sắc văn hóa</li>
+            <li><b>technology companies</b> — công ty công nghệ</li>
+            <li><b>digital dependence</b> — sự phụ thuộc số</li>
+            <li><b>local values</b> — giá trị địa phương</li>
+            <li><b>artificial intelligence</b> — trí tuệ nhân tạo</li>
+            <li><b>global platforms</b> — nền tảng toàn cầu</li>
+            <li><b>internet information</b> — thông tin trên Internet</li>
+            <li><b>data control</b> — kiểm soát dữ liệu</li>
+            <li><b>technology experts</b> — chuyên gia công nghệ</li>
+            <li><b>digital security</b> — an ninh số</li>
+            <li><b>language preservation</b> — bảo tồn ngôn ngữ</li>
+            <li><b>online influence</b> — ảnh hưởng trực tuyến</li>
+        </ul>
+        `,
+
+                    logic: `
+        Logic:
+        <br>
+        Các quốc gia lo ngại bị phụ thuộc vào AI nước ngoài.
+        <br><br>
+        Vì vậy:
+        <br>
+        Họ muốn phát triển AI phản ánh văn hóa và ngôn ngữ riêng.
+        `
+                },
+
+                band7: {
+                    title: "Chiều sâu & Mở rộng",
+
+                    content: `
+        Sự phát triển của <b>Sovereign AI</b> phản ánh mối lo ngại ngày càng lớn về <b>digital colonialism</b>, trong đó một số tập đoàn công nghệ toàn cầu kiểm soát dữ liệu, thông tin và các hệ thống AI được sử dụng trên toàn thế giới.
+
+        Nhiều quốc gia cho rằng việc phụ thuộc quá nhiều vào các mô hình AI nước ngoài có thể khiến bản sắc văn hóa và ngôn ngữ địa phương bị suy yếu. 
+        Các hệ thống AI được huấn luyện chủ yếu bằng dữ liệu phương Tây có thể vô tình ưu tiên <b>Western perspectives</b> và bỏ qua các giá trị văn hóa khác.
+
+        Vì lý do này, nhiều chính phủ đang đầu tư vào <b>domestic AI infrastructure</b>, <b>national data centers</b> và các mô hình AI sử dụng ngôn ngữ bản địa. 
+        Điều này không chỉ giúp bảo vệ <b>cultural sovereignty</b> mà còn tăng cường <b>data security</b> và quyền kiểm soát công nghệ.
+
+        Tuy nhiên, việc phát triển AI chủ quyền cũng đặt ra nhiều thách thức lớn. 
+        Các mô hình AI hiện đại yêu cầu lượng dữ liệu khổng lồ, năng lực tính toán mạnh và đội ngũ chuyên gia trình độ cao. 
+        Vì vậy, nhiều quốc gia đang phát triển có thể gặp khó khăn trong việc cạnh tranh với các công ty công nghệ đa quốc gia.
+
+        Ngoài ra, nếu mỗi quốc gia phát triển hệ sinh thái AI riêng biệt, điều này có thể dẫn đến <b>technological fragmentation</b> và làm giảm tính kết nối toàn cầu của Internet.
+
+        <br><br>
+
+        <b>Useful Vocabulary:</b>
+
+        <ul>
+            <li><b>Sovereign AI</b> — AI chủ quyền</li>
+            <li><b>digital colonialism</b> — thực dân số</li>
+            <li><b>Western perspectives</b> — góc nhìn phương Tây</li>
+            <li><b>domestic AI infrastructure</b> — hạ tầng AI trong nước</li>
+            <li><b>national data centers</b> — trung tâm dữ liệu quốc gia</li>
+            <li><b>cultural sovereignty</b> — chủ quyền văn hóa</li>
+            <li><b>data security</b> — an ninh dữ liệu</li>
+            <li><b>technological fragmentation</b> — sự phân mảnh công nghệ</li>
+            <li><b>local languages</b> — ngôn ngữ địa phương</li>
+            <li><b>AI governance</b> — quản trị AI</li>
+            <li><b>digital infrastructure</b> — hạ tầng số</li>
+            <li><b>multinational corporations</b> — tập đoàn đa quốc gia</li>
+            <li><b>computational power</b> — năng lực tính toán</li>
+            <li><b>global technology dominance</b> — sự thống trị công nghệ toàn cầu</li>
+            <li><b>cultural preservation</b> — bảo tồn văn hóa</li>
+        </ul>
+        `,
+
+                    logic: `
+        Logic:
+        <br>
+        AI systems controlled by global corporations may dominate information and cultural narratives.
+        <br><br>
+        Therefore:
+        <br>
+        Nations seek Sovereign AI to protect language, culture, and data sovereignty.
+        <br><br>
+        However:
+        <br>
+        Building national AI systems requires enormous technological and financial resources.
+        `
+                },
+
+                band9: {
+                    title: "Đa chiều & Phản biện",
+
+                    content: `
+        Sự nổi lên của <b>Sovereign AI</b> đánh dấu một giai đoạn mới trong cuộc cạnh tranh quyền lực toàn cầu, nơi dữ liệu, thuật toán và trí tuệ nhân tạo trở thành tài nguyên chiến lược tương tự dầu mỏ hoặc năng lượng trong quá khứ.
+
+        Khái niệm <b>digital colonialism</b> phản ánh nỗi lo rằng một số tập đoàn công nghệ khổng lồ đang dần kiểm soát hạ tầng thông tin, dữ liệu cá nhân và các <b>cultural narratives</b> trên quy mô toàn cầu. 
+        Khi phần lớn các mô hình AI được huấn luyện bằng dữ liệu và giá trị phương Tây, chúng có thể vô tình củng cố <b>cultural hegemony</b> và làm suy yếu sự đa dạng văn hóa.
+
+        Trong bối cảnh đó, nhiều quốc gia coi việc phát triển AI chủ quyền là một phần của chiến lược bảo vệ <b>digital sovereignty</b>, <b>national security</b> và bản sắc dân tộc. 
+        Các mô hình AI nội địa có khả năng phản ánh ngôn ngữ, lịch sử và hệ giá trị địa phương chính xác hơn so với các hệ thống toàn cầu hóa.
+
+        Hơn nữa, AI không chỉ là công cụ công nghệ mà còn là một hệ thống ảnh hưởng đến giáo dục, truyền thông, nhận thức xã hội và thậm chí cả tư duy chính trị. 
+        Điều này khiến việc phụ thuộc hoàn toàn vào các nền tảng AI nước ngoài trở thành một vấn đề chiến lược dài hạn.
+
+        Tuy nhiên, phong trào Sovereign AI cũng tồn tại nhiều rủi ro tiềm ẩn. 
+        Nếu bị đẩy quá xa, nó có thể dẫn đến <b>digital nationalism</b>, sự phân mảnh Internet và việc các chính phủ sử dụng AI như công cụ kiểm soát thông tin hoặc giám sát xã hội.
+
+        Ngoài ra, việc phát triển các mô hình AI cấp quốc gia đòi hỏi <b>massive computational infrastructure</b>, nguồn dữ liệu nội địa lớn và đội ngũ chuyên gia AI trình độ cao — những điều mà không phải quốc gia nào cũng sở hữu.
+
+        Một vấn đề khác là liệu việc tạo ra nhiều hệ thống AI mang tính quốc gia có thực sự giúp bảo vệ sự đa dạng văn hóa hay chỉ đơn giản tạo ra nhiều “bong bóng thông tin” tách biệt nhau hơn.
+
+        Xét tổng thể, Sovereign AI phản ánh nỗ lực giành lại quyền kiểm soát văn hóa và dữ liệu trong thời đại AI. 
+        Tuy nhiên, thách thức lớn nhất sẽ là cân bằng giữa <b>technological independence</b>, hợp tác quốc tế và quyền tự do thông tin trong một thế giới ngày càng số hóa.
+
+        <br><br>
+
+        <b>Useful Vocabulary:</b>
+
+        <ul>
+            <li><b>Sovereign AI</b> — AI chủ quyền</li>
+            <li><b>digital colonialism</b> — thực dân số</li>
+            <li><b>cultural narratives</b> — hệ tư tưởng/văn hóa được lan truyền</li>
+            <li><b>cultural hegemony</b> — bá quyền văn hóa</li>
+            <li><b>digital sovereignty</b> — chủ quyền số</li>
+            <li><b>national security</b> — an ninh quốc gia</li>
+            <li><b>digital nationalism</b> — chủ nghĩa dân tộc số</li>
+            <li><b>massive computational infrastructure</b> — hạ tầng tính toán khổng lồ</li>
+            <li><b>technological independence</b> — độc lập công nghệ</li>
+            <li><b>algorithmic influence</b> — ảnh hưởng thuật toán</li>
+            <li><b>AI governance</b> — quản trị AI</li>
+            <li><b>data sovereignty</b> — chủ quyền dữ liệu</li>
+            <li><b>global tech monopolies</b> — độc quyền công nghệ toàn cầu</li>
+            <li><b>information control</b> — kiểm soát thông tin</li>
+            <li><b>cultural diversity</b> — đa dạng văn hóa</li>
+            <li><b>AI ecosystems</b> — hệ sinh thái AI</li>
+            <li><b>technological fragmentation</b> — phân mảnh công nghệ</li>
+            <li><b>digital infrastructure</b> — hạ tầng số</li>
+            <li><b>cross-cultural representation</b> — sự đại diện đa văn hóa</li>
+        </ul>
+        `,
+
+                    logic: `
+        Logic:
+        <br>
+        Global AI systems may centralize cultural and informational power.
+        <br><br>
+        Therefore:
+        <br>
+        Nations pursue Sovereign AI to protect digital sovereignty, language, and cultural identity.
+        <br><br>
+        However:
+        <br>
+        Excessive national control over AI may create technological fragmentation and threaten information freedom.
+        <br><br>
+        Final evaluation:
+        <br>
+        Sovereign AI is ultimately a geopolitical struggle over culture, data, and technological independence in the AI age.
+        `
+                },
+
+                summaryTable: [
+                    {
+                        label: 'Trọng tâm',
+                        b5: 'AI quốc gia',
+                        b7: 'Dữ liệu & văn hóa',
+                        b9: 'Địa chính trị AI'
+                    },
+
+                    {
+                        label: 'Kiểu lập luận',
+                        b5: 'Lợi ích cơ bản',
+                        b7: 'Cause - Effect',
+                        b9: 'Phân tích hệ thống & phản biện'
+                    },
+
+                    {
+                        label: 'Góc nhìn',
+                        b5: 'Quốc gia',
+                        b7: 'Công nghệ & văn hóa',
+                        b9: 'Toàn cầu & địa chính trị'
+                    },
+
+                    {
+                        label: 'Độ sâu ý tưởng',
+                        b5: 'Bảo vệ ngôn ngữ',
+                        b7: 'Chủ quyền dữ liệu',
+                        b9: 'Quyền lực thuật toán toàn cầu'
+                    },
+
+                    {
+                        label: 'Từ khóa nổi bật',
+                        b5: 'National AI, local values',
+                        b7: 'Digital colonialism, data sovereignty',
+                        b9: 'Cultural hegemony, technological independence'
+                    }
+                ]
+            },
+            {
+                id: "topic_deepfake_objective_truth",
+
+                topicName: "Deepfake & Sự thật khách quan",
+
+                subjectText: "DEEPFAKE AND DIGITAL REALITY",
+
+                mainTopic: {
+                    title: "Chủ đề: Deepfake & The Erosion of Objective Truth",
+
+                    content: `
+        <b>Topic:</b> The rapid development of deepfake technology is eroding objective truth by making it increasingly difficult to distinguish between real and fabricated images, videos, and audio recordings.
+
+        <br><br>
+
+        <b>Question Analysis:</b>
+        Chủ đề tập trung vào:
+        <ul>
+            <li>Deepfake làm mờ ranh giới giữa thật và giả</li>
+            <li>Con người dần mất niềm tin vào bằng chứng hình ảnh và âm thanh</li>
+            <li>Nguy cơ thao túng chính trị, truyền thông và dư luận</li>
+            <li>Khủng hoảng nhận thức trong thời đại AI</li>
+            <li>Vai trò của công nghệ xác minh và digital forensics</li>
+            <li>Tác động tâm lý và xã hội khi “mọi thứ đều có thể giả”</li>
+        </ul>
+
+        <b>Main Direction:</b>
+        Phân tích rằng deepfake không chỉ là vấn đề công nghệ hay fake news, mà còn là một cuộc khủng hoảng niềm tin khi con người không còn chắc chắn điều gì là thật trong môi trường số.
+        `,
+
+                    logic: `
+        Logic triển khai:
+        <br>
+        Deepfake technology → Hyper-realistic fake media
+        <br><br>
+        Difficulty distinguishing reality from fabrication → Loss of trust
+        <br><br>
+        Final idea:
+        <br>
+        Deepfake may trigger an epistemic crisis where objective truth becomes increasingly unstable in digital society.
+        `
+                },
+
+                band5: {
+                    title: "Ý tưởng đơn giản",
+
+                    content: `
+        Deepfake là công nghệ có thể tạo ra video hoặc âm thanh giả nhưng trông rất thật. 
+        Điều này khiến nhiều người khó phân biệt giữa sự thật và thông tin giả trên Internet.
+
+        Ví dụ, một video giả của người nổi tiếng hoặc chính trị gia có thể lan truyền rất nhanh trên <b>social media</b>. 
+        Nhiều người có thể tin vào nội dung đó ngay cả khi nó không có thật.
+
+        Điều nguy hiểm là mọi người bắt đầu mất niềm tin vào <b>digital evidence</b> như hình ảnh hoặc video. 
+        Ngày nay, ngay cả bằng chứng rõ ràng cũng có thể bị nghi ngờ là deepfake.
+
+        Ngoài ra, deepfake còn có thể được sử dụng để lừa đảo, thao túng dư luận hoặc phá hoại danh tiếng cá nhân. 
+        Vì vậy, các chuyên gia đang phát triển <b>digital forensics</b> để phát hiện nội dung giả.
+
+        <br><br>
+
+        <b>Useful Vocabulary:</b>
+
+        <ul>
+            <li><b>social media</b> — mạng xã hội</li>
+            <li><b>digital evidence</b> — bằng chứng kỹ thuật số</li>
+            <li><b>digital forensics</b> — pháp y kỹ thuật số</li>
+            <li><b>fake videos</b> — video giả</li>
+            <li><b>fake audio</b> — âm thanh giả</li>
+            <li><b>online misinformation</b> — thông tin sai lệch trên mạng</li>
+            <li><b>public trust</b> — niềm tin công chúng</li>
+            <li><b>internet users</b> — người dùng Internet</li>
+            <li><b>artificial intelligence</b> — trí tuệ nhân tạo</li>
+            <li><b>manipulated content</b> — nội dung bị chỉnh sửa</li>
+            <li><b>real and fake</b> — thật và giả</li>
+            <li><b>media technology</b> — công nghệ truyền thông</li>
+            <li><b>public opinion</b> — dư luận</li>
+            <li><b>identity theft</b> — đánh cắp danh tính</li>
+            <li><b>cybercrime</b> — tội phạm mạng</li>
+        </ul>
+        `,
+
+                    logic: `
+        Logic:
+        <br>
+        Deepfake tạo ra nội dung giả rất giống thật.
+        <br><br>
+        Vì vậy:
+        <br>
+        Mọi người bắt đầu nghi ngờ các bằng chứng trên Internet.
+        `
+                },
+
+                band7: {
+                    title: "Chiều sâu & Mở rộng",
+
+                    content: `
+        Sự phát triển nhanh chóng của công nghệ <b>deepfake</b> đang tạo ra những thách thức nghiêm trọng đối với độ tin cậy của thông tin trong xã hội hiện đại. 
+        Nhờ vào AI, các video và âm thanh giả hiện nay có mức độ <b>hyper-realism</b> cao đến mức người bình thường gần như không thể nhận ra sự khác biệt.
+
+        Điều này làm gia tăng nguy cơ <b>misinformation</b>, thao túng chính trị và phá hoại danh tiếng cá nhân. 
+        Một video giả của chính trị gia hoặc người nổi tiếng có thể nhanh chóng lan truyền trên mạng xã hội và ảnh hưởng mạnh đến <b>public perception</b> trước khi được kiểm chứng.
+
+        Nghiêm trọng hơn, deepfake không chỉ tạo ra thông tin giả mà còn làm suy yếu niềm tin vào toàn bộ hệ thống bằng chứng số. 
+        Khi mọi hình ảnh hoặc âm thanh đều có thể bị làm giả, con người bắt đầu nghi ngờ cả những bằng chứng thật.
+
+        Điều này dẫn đến một dạng <b>epistemic crisis</b>, nơi xã hội mất dần khả năng xác định điều gì là sự thật khách quan. 
+        Trong bối cảnh đó, các công nghệ <b>digital forensics</b> và hệ thống xác minh thông tin trở nên ngày càng quan trọng.
+
+        Tuy nhiên, cuộc chạy đua giữa công nghệ tạo deepfake và công nghệ phát hiện deepfake có thể sẽ không bao giờ kết thúc hoàn toàn. 
+        Điều này đặt ra thách thức lâu dài đối với báo chí, pháp luật và niềm tin xã hội.
+
+        <br><br>
+
+        <b>Useful Vocabulary:</b>
+
+        <ul>
+            <li><b>deepfake</b> — công nghệ deepfake</li>
+            <li><b>hyper-realism</b> — mức độ siêu thực</li>
+            <li><b>misinformation</b> — thông tin sai lệch</li>
+            <li><b>public perception</b> — nhận thức công chúng</li>
+            <li><b>epistemic crisis</b> — khủng hoảng nhận thức</li>
+            <li><b>digital forensics</b> — pháp y kỹ thuật số</li>
+            <li><b>objective truth</b> — sự thật khách quan</li>
+            <li><b>AI-generated media</b> — nội dung do AI tạo ra</li>
+            <li><b>media manipulation</b> — thao túng truyền thông</li>
+            <li><b>information verification</b> — xác minh thông tin</li>
+            <li><b>fake narratives</b> — câu chuyện giả</li>
+            <li><b>public distrust</b> — sự mất niềm tin công chúng</li>
+            <li><b>political propaganda</b> — tuyên truyền chính trị</li>
+            <li><b>digital deception</b> — lừa dối kỹ thuật số</li>
+            <li><b>media authenticity</b> — tính xác thực truyền thông</li>
+        </ul>
+        `,
+
+                    logic: `
+        Logic:
+        <br>
+        Deepfake creates hyper-realistic fake content.
+        <br><br>
+        Therefore:
+        <br>
+        People struggle to distinguish truth from fabrication.
+        <br><br>
+        Result:
+        <br>
+        Society gradually loses trust in digital evidence and objective truth.
+        `
+                },
+
+                band9: {
+                    title: "Đa chiều & Phản biện",
+
+                    content: `
+        Sự xuất hiện của công nghệ <b>deepfake</b> đánh dấu một bước ngoặt nguy hiểm trong lịch sử truyền thông kỹ thuật số, nơi ranh giới giữa thực tại và mô phỏng trở nên ngày càng mong manh. 
+        Không giống fake news truyền thống, deepfake tạo ra các hình ảnh, video và giọng nói có mức độ <b>hyper-realism</b> gần như hoàn hảo, khiến con người khó có thể phân biệt bằng trực giác thông thường.
+
+        Vấn đề cốt lõi không chỉ nằm ở việc lan truyền thông tin giả, mà ở sự xói mòn của niềm tin vào chính khái niệm <b>objective truth</b>. 
+        Trong quá khứ, hình ảnh và video thường được xem như bằng chứng trực tiếp của thực tế. 
+        Tuy nhiên, khi AI có thể tạo ra những bằng chứng giả cực kỳ thuyết phục, toàn bộ nền tảng nhận thức của xã hội bắt đầu bị lung lay.
+
+        Điều này dẫn đến một dạng <b>epistemic crisis</b>, nơi con người không còn chắc chắn điều gì là thật ngay cả khi tận mắt nhìn thấy. 
+        Nguy hiểm hơn, deepfake không chỉ khiến người ta tin vào điều giả, mà còn khiến họ nghi ngờ cả những điều thật — hiện tượng đôi khi được gọi là “the liar’s dividend”.
+
+        Trong lĩnh vực chính trị, deepfake có thể trở thành công cụ cho <b>political manipulation</b>, chiến tranh thông tin và phá hoại dân chủ. 
+        Một video giả được tung ra đúng thời điểm có thể gây ảnh hưởng lớn đến bầu cử, ngoại giao hoặc xung đột xã hội trước khi bị bác bỏ.
+
+        Ngoài ra, sự phổ biến của nội dung AI-generated còn tạo ra tác động tâm lý sâu sắc đối với xã hội hiện đại. 
+        Khi con người liên tục sống trong môi trường mà mọi bằng chứng số đều có thể bị giả mạo, họ có xu hướng phát triển <b>digital skepticism</b> và mất niềm tin vào truyền thông, thể chế và thậm chí cả lẫn nhau.
+
+        Để đối phó với vấn đề này, các hệ thống <b>digital forensics</b>, xác minh nguồn gốc dữ liệu và AI detection đang được phát triển mạnh mẽ. 
+        Tuy nhiên, cuộc chiến giữa công nghệ giả mạo và công nghệ phát hiện về bản chất là một “arms race” gần như vô tận.
+
+        Một nghịch lý đáng chú ý là AI vừa là nguyên nhân tạo ra deepfake, vừa là công cụ chính để chống lại nó. 
+        Điều này cho thấy cuộc khủng hoảng hiện nay không chỉ là vấn đề công nghệ mà còn là thách thức triết học về nhận thức, sự thật và niềm tin trong thời đại số.
+
+        Xét tổng thể, deepfake có thể trở thành một trong những mối đe dọa lớn nhất đối với nền tảng nhận thức của xã hội hiện đại nếu con người không phát triển đủ nhanh các cơ chế xác minh và giáo dục truyền thông số.
+
+        <br><br>
+
+        <b>Useful Vocabulary:</b>
+
+        <ul>
+            <li><b>deepfake</b> — công nghệ deepfake</li>
+            <li><b>hyper-realism</b> — mức độ siêu thực</li>
+            <li><b>objective truth</b> — sự thật khách quan</li>
+            <li><b>epistemic crisis</b> — khủng hoảng nhận thức</li>
+            <li><b>political manipulation</b> — thao túng chính trị</li>
+            <li><b>digital skepticism</b> — sự hoài nghi kỹ thuật số</li>
+            <li><b>digital forensics</b> — pháp y kỹ thuật số</li>
+            <li><b>AI-generated content</b> — nội dung do AI tạo ra</li>
+            <li><b>media authenticity</b> — tính xác thực truyền thông</li>
+            <li><b>information warfare</b> — chiến tranh thông tin</li>
+            <li><b>the liar’s dividend</b> — hiệu ứng “người nói dối hưởng lợi”</li>
+            <li><b>digital deception</b> — lừa dối kỹ thuật số</li>
+            <li><b>cognitive trust</b> — niềm tin nhận thức</li>
+            <li><b>truth verification</b> — xác minh sự thật</li>
+            <li><b>algorithmic manipulation</b> — thao túng thuật toán</li>
+            <li><b>synthetic media</b> — truyền thông tổng hợp</li>
+            <li><b>perception engineering</b> — thao túng nhận thức</li>
+            <li><b>information integrity</b> — tính toàn vẹn thông tin</li>
+            <li><b>digital reality</b> — thực tại kỹ thuật số</li>
+        </ul>
+        `,
+
+                    logic: `
+        Logic:
+        <br>
+        Deepfake technology creates hyper-realistic fabricated media.
+        <br><br>
+        Therefore:
+        <br>
+        Society can no longer fully trust visual and audio evidence.
+        <br><br>
+        Result:
+        <br>
+        An epistemic crisis emerges where objective truth becomes unstable.
+        <br><br>
+        Final evaluation:
+        <br>
+        Deepfake threatens not only information accuracy, but also humanity’s fundamental trust in reality itself.
+        `
+                },
+
+                summaryTable: [
+                    {
+                        label: 'Trọng tâm',
+                        b5: 'Video giả',
+                        b7: 'Mất niềm tin',
+                        b9: 'Khủng hoảng nhận thức'
+                    },
+
+                    {
+                        label: 'Kiểu lập luận',
+                        b5: 'Nguyên nhân - hậu quả đơn giản',
+                        b7: 'Cause - Effect',
+                        b9: 'Triết học & xã hội'
+                    },
+
+                    {
+                        label: 'Góc nhìn',
+                        b5: 'Internet & mạng xã hội',
+                        b7: 'Truyền thông & chính trị',
+                        b9: 'Nhận thức & sự thật'
+                    },
+
+                    {
+                        label: 'Độ sâu ý tưởng',
+                        b5: 'Thông tin giả',
+                        b7: 'Sự xói mòn niềm tin',
+                        b9: 'Sụp đổ nền tảng nhận thức'
+                    },
+
+                    {
+                        label: 'Từ khóa nổi bật',
+                        b5: 'Fake videos, public trust',
+                        b7: 'Hyper-realism, digital forensics',
+                        b9: 'Epistemic crisis, objective truth'
+                    }
+                ]
+            },
+            {
+                id: "topic_right_to_disconnect",
+
+                topicName: "Quyền được ngắt kết nối",
+
+                subjectText: "WORK, TECHNOLOGY AND DIGITAL LIFE",
+
+                mainTopic: {
+                    title: "Chủ đề: The Right to Disconnect in a Hyper-connected Era",
+
+                    content: `
+        <b>Topic:</b> As AI tools, remote work, and constant digital communication become normal in 2026, many people argue that employees should have a legal “right to disconnect” from work-related messages and responsibilities outside working hours.
+
+        <br><br>
+
+        <b>Question Analysis:</b>
+        Chủ đề tập trung vào:
+        <ul>
+            <li>Ranh giới giữa công việc và đời sống cá nhân đang biến mất</li>
+            <li>Làm việc từ xa và AI khiến nhân viên luôn “online”</li>
+            <li>Áp lực trả lời email, tin nhắn ngoài giờ làm việc</li>
+            <li>Digital burnout và sức khỏe tinh thần</li>
+            <li>Vai trò của luật pháp trong bảo vệ quyền lao động</li>
+            <li>Cân bằng giữa năng suất và chất lượng cuộc sống</li>
+        </ul>
+
+        <b>Main Direction:</b>
+        Phân tích rằng trong thời đại siêu kết nối, quyền được ngắt kết nối không chỉ là vấn đề tiện lợi cá nhân mà còn là quyền lao động và sức khỏe tinh thần trong môi trường làm việc hiện đại.
+        `,
+
+                    logic: `
+        Logic triển khai:
+        <br>
+        Remote work + constant connectivity → Work-life boundaries disappear
+        <br><br>
+        Continuous digital availability → Stress and digital burnout
+        <br><br>
+        Final idea:
+        <br>
+        Legislative protection may be necessary to preserve employees’ mental health and personal autonomy.
+        `
+                },
+
+                band5: {
+                    title: "Ý tưởng đơn giản",
+
+                    content: `
+        Ngày nay, nhiều người phải kiểm tra email và tin nhắn công việc ngay cả sau giờ làm việc. 
+        Điều này đặc biệt phổ biến khi <b>remote work</b> và công nghệ AI ngày càng phát triển.
+
+        Một số nhân viên cảm thấy họ luôn phải “online” để trả lời sếp hoặc đồng nghiệp. 
+        Điều này làm giảm thời gian nghỉ ngơi và ảnh hưởng đến <b>work-life balance</b>.
+
+        Ngoài ra, việc sử dụng điện thoại và máy tính liên tục có thể gây ra <b>digital burnout</b> và căng thẳng tinh thần. 
+        Nhiều người không còn ranh giới rõ ràng giữa công việc và đời sống cá nhân.
+
+        Vì vậy, một số quốc gia đang xem xét tạo ra luật về <b>the right to disconnect</b>. 
+        Luật này giúp nhân viên có quyền không trả lời công việc ngoài giờ làm việc chính thức.
+
+        Tuy nhiên, một số công ty cho rằng việc luôn kết nối giúp tăng năng suất và giao tiếp nhanh hơn trong môi trường toàn cầu.
+
+        <br><br>
+
+        <b>Useful Vocabulary:</b>
+
+        <ul>
+            <li><b>remote work</b> — làm việc từ xa</li>
+            <li><b>work-life balance</b> — cân bằng công việc và cuộc sống</li>
+            <li><b>digital burnout</b> — kiệt sức kỹ thuật số</li>
+            <li><b>the right to disconnect</b> — quyền được ngắt kết nối</li>
+            <li><b>working hours</b> — giờ làm việc</li>
+            <li><b>mental health</b> — sức khỏe tinh thần</li>
+            <li><b>online communication</b> — giao tiếp trực tuyến</li>
+            <li><b>constant connectivity</b> — kết nối liên tục</li>
+            <li><b>personal time</b> — thời gian cá nhân</li>
+            <li><b>employee stress</b> — căng thẳng nhân viên</li>
+            <li><b>job pressure</b> — áp lực công việc</li>
+            <li><b>digital devices</b> — thiết bị kỹ thuật số</li>
+            <li><b>office culture</b> — văn hóa công ty</li>
+            <li><b>productivity</b> — năng suất</li>
+            <li><b>work emails</b> — email công việc</li>
+        </ul>
+        `,
+
+                    logic: `
+        Logic:
+        <br>
+        Công nghệ khiến nhân viên luôn kết nối với công việc.
+        <br><br>
+        Vì vậy:
+        <br>
+        Nhiều người bị căng thẳng và muốn có quyền nghỉ ngơi ngoài giờ làm.
+        `
+                },
+
+                band7: {
+                    title: "Chiều sâu & Mở rộng",
+
+                    content: `
+        Sự phát triển của <b>remote work</b>, AI assistants và các nền tảng giao tiếp trực tuyến đã làm thay đổi đáng kể môi trường lao động hiện đại. 
+        Tuy nhiên, điều này cũng khiến ranh giới giữa công việc và đời sống cá nhân trở nên ngày càng mờ nhạt.
+
+        Trong nhiều công ty, nhân viên được kỳ vọng phải phản hồi email hoặc tin nhắn công việc gần như mọi lúc. 
+        Tình trạng <b>constant connectivity</b> này có thể làm gia tăng căng thẳng tâm lý và dẫn đến <b>digital burnout</b>.
+
+        Ngoài ra, việc thiếu <b>boundary management</b> khiến nhiều người khó tách biệt giữa không gian làm việc và thời gian nghỉ ngơi. 
+        Điều này đặc biệt nghiêm trọng đối với nhân viên làm việc từ xa, khi nhà riêng cũng trở thành văn phòng.
+
+        Vì lý do đó, nhiều chuyên gia cho rằng cần có <b>legislative intervention</b> để bảo vệ quyền lao động trong thời đại số. 
+        Luật về “the right to disconnect” có thể giúp nhân viên duy trì sức khỏe tinh thần và cải thiện <b>work-life balance</b>.
+
+        Tuy nhiên, một số doanh nghiệp lo ngại rằng các quy định quá cứng nhắc có thể làm giảm tính linh hoạt và khả năng cạnh tranh toàn cầu, đặc biệt trong các ngành hoạt động xuyên múi giờ.
+
+        <br><br>
+
+        <b>Useful Vocabulary:</b>
+
+        <ul>
+            <li><b>remote work</b> — làm việc từ xa</li>
+            <li><b>constant connectivity</b> — kết nối liên tục</li>
+            <li><b>digital burnout</b> — kiệt sức kỹ thuật số</li>
+            <li><b>boundary management</b> — quản trị ranh giới</li>
+            <li><b>legislative intervention</b> — sự can thiệp của luật pháp</li>
+            <li><b>work-life balance</b> — cân bằng công việc và cuộc sống</li>
+            <li><b>employee wellbeing</b> — phúc lợi nhân viên</li>
+            <li><b>mental exhaustion</b> — kiệt quệ tinh thần</li>
+            <li><b>digital communication</b> — giao tiếp kỹ thuật số</li>
+            <li><b>workplace flexibility</b> — sự linh hoạt nơi làm việc</li>
+            <li><b>psychological stress</b> — căng thẳng tâm lý</li>
+            <li><b>labor rights</b> — quyền lao động</li>
+            <li><b>virtual workplace</b> — nơi làm việc ảo</li>
+            <li><b>professional obligations</b> — nghĩa vụ công việc</li>
+            <li><b>employee productivity</b> — năng suất nhân viên</li>
+        </ul>
+        `,
+
+                    logic: `
+        Logic:
+        <br>
+        Hyper-connectivity removes clear boundaries between work and private life.
+        <br><br>
+        Result:
+        <br>
+        Employees experience stress, exhaustion, and digital burnout.
+        <br><br>
+        Therefore:
+        <br>
+        Governments may need to introduce legal protection for workers’ personal time.
+        `
+                },
+
+                band9: {
+                    title: "Đa chiều & Phản biện",
+
+                    content: `
+        Trong kỷ nguyên <b>hyper-connectivity</b>, nơi AI assistants, remote work và các nền tảng giao tiếp thời gian thực trở thành mặc định, khái niệm “kết thúc giờ làm việc” đang dần biến mất khỏi đời sống hiện đại.
+
+        Công nghệ số ban đầu được kỳ vọng sẽ tạo ra sự linh hoạt và nâng cao năng suất lao động. 
+        Tuy nhiên, trên thực tế, nhiều nhân viên hiện nay phải duy trì trạng thái “always available”, liên tục phản hồi email, cuộc gọi hoặc thông báo công việc ngay cả ngoài giờ hành chính.
+
+        Tình trạng này tạo ra một dạng <b>digital burnout</b> mãn tính, khi con người không còn đủ thời gian để phục hồi tinh thần hoặc tách biệt khỏi áp lực công việc. 
+        Việc thiếu <b>boundary management</b> không chỉ ảnh hưởng đến sức khỏe tâm lý mà còn làm suy giảm chất lượng các mối quan hệ cá nhân và đời sống gia đình.
+
+        Đáng chú ý, AI và hệ thống theo dõi năng suất hiện đại còn làm gia tăng cảm giác bị giám sát liên tục. 
+        Trong nhiều trường hợp, nhân viên cảm thấy áp lực phải duy trì sự hiện diện trực tuyến để chứng minh hiệu suất làm việc, ngay cả khi điều đó gây tổn hại đến <b>mental wellbeing</b>.
+
+        Vì vậy, phong trào ủng hộ <b>the right to disconnect</b> đang được xem như một hình thức bảo vệ quyền lao động kiểu mới trong nền kinh tế số. 
+        Một số quốc gia châu Âu đã áp dụng <b>legislative intervention</b> nhằm giới hạn việc liên lạc công việc ngoài giờ và bảo vệ thời gian cá nhân của nhân viên.
+
+        Tuy nhiên, vấn đề này cũng gây tranh cãi trong bối cảnh toàn cầu hóa. 
+        Các công ty đa quốc gia hoạt động xuyên múi giờ thường yêu cầu khả năng phản hồi linh hoạt để duy trì hiệu quả kinh doanh. 
+        Một số người cho rằng các quy định quá nghiêm ngặt có thể làm giảm tính cạnh tranh và đổi mới của doanh nghiệp.
+
+        Ngoài ra, không phải mọi nhân viên đều phản đối mô hình làm việc linh hoạt. 
+        Một số người đánh giá cao khả năng tự quản lý thời gian và thích sự kết hợp giữa công việc và đời sống cá nhân hơn mô hình văn phòng truyền thống.
+
+        Dù vậy, vấn đề cốt lõi nằm ở quyền lựa chọn và khả năng kiểm soát thời gian cá nhân. 
+        Khi công nghệ khiến con người luôn trong trạng thái kết nối, việc bảo vệ quyền được “offline” có thể trở thành yếu tố thiết yếu để duy trì sức khỏe tinh thần và quyền tự chủ cá nhân.
+
+        Xét tổng thể, “the right to disconnect” không đơn thuần là vấn đề tiện lợi cá nhân mà phản ánh cuộc đấu tranh mới giữa công nghệ, năng suất lao động và quyền con người trong xã hội số hiện đại.
+
+        <br><br>
+
+        <b>Useful Vocabulary:</b>
+
+        <ul>
+            <li><b>hyper-connectivity</b> — trạng thái siêu kết nối</li>
+            <li><b>digital burnout</b> — kiệt sức kỹ thuật số</li>
+            <li><b>boundary management</b> — quản trị ranh giới</li>
+            <li><b>mental wellbeing</b> — sức khỏe tinh thần</li>
+            <li><b>the right to disconnect</b> — quyền được ngắt kết nối</li>
+            <li><b>legislative intervention</b> — sự can thiệp của luật pháp</li>
+            <li><b>always available culture</b> — văn hóa luôn sẵn sàng làm việc</li>
+            <li><b>workplace surveillance</b> — giám sát nơi làm việc</li>
+            <li><b>employee autonomy</b> — quyền tự chủ của nhân viên</li>
+            <li><b>digital labor</b> — lao động kỹ thuật số</li>
+            <li><b>psychological exhaustion</b> — kiệt quệ tâm lý</li>
+            <li><b>professional flexibility</b> — sự linh hoạt nghề nghiệp</li>
+            <li><b>labor protection</b> — bảo vệ lao động</li>
+            <li><b>remote workforce</b> — lực lượng lao động từ xa</li>
+            <li><b>technological dependency</b> — sự phụ thuộc công nghệ</li>
+            <li><b>work-life integration</b> — sự hòa trộn công việc và đời sống</li>
+            <li><b>digital productivity culture</b> — văn hóa năng suất kỹ thuật số</li>
+            <li><b>personal autonomy</b> — quyền tự chủ cá nhân</li>
+            <li><b>occupational stress</b> — áp lực nghề nghiệp</li>
+        </ul>
+        `,
+
+                    logic: `
+        Logic:
+        <br>
+        AI and hyper-connectivity blur the boundaries between work and private life.
+        <br><br>
+        Result:
+        <br>
+        Employees experience digital burnout and psychological exhaustion.
+        <br><br>
+        Therefore:
+        <br>
+        Governments may need legislative intervention to protect workers’ mental health and autonomy.
+        <br><br>
+        Final evaluation:
+        <br>
+        The “right to disconnect” represents a modern labor rights movement in response to the pressures of the digital economy.
+        `
+                },
+
+                summaryTable: [
+                    {
+                        label: 'Trọng tâm',
+                        b5: 'Làm việc ngoài giờ',
+                        b7: 'Kiệt sức số',
+                        b9: 'Quyền lao động thời đại số'
+                    },
+
+                    {
+                        label: 'Kiểu lập luận',
+                        b5: 'Nguyên nhân - hậu quả',
+                        b7: 'Cause - Effect',
+                        b9: 'Phân tích xã hội & luật pháp'
+                    },
+
+                    {
+                        label: 'Góc nhìn',
+                        b5: 'Nhân viên',
+                        b7: 'Doanh nghiệp & sức khỏe',
+                        b9: 'Công nghệ & quyền con người'
+                    },
+
+                    {
+                        label: 'Độ sâu ý tưởng',
+                        b5: 'Áp lực online',
+                        b7: 'Mất ranh giới công việc',
+                        b9: 'Khủng hoảng quyền riêng tư lao động'
+                    },
+
+                    {
+                        label: 'Từ khóa nổi bật',
+                        b5: 'Remote work, stress',
+                        b7: 'Digital burnout, boundary management',
+                        b9: 'Legislative intervention, labor autonomy'
+                    }
+                ]
+            },
+            {
+                id: "topic_synthetic_biology_deextinction",
+
+                topicName: "Sinh học tổng hợp & Hồi sinh loài tuyệt chủng",
+
+                subjectText: "BIOTECHNOLOGY AND ETHICS",
+
+                mainTopic: {
+                    title: "Chủ đề: Synthetic Biology & De-extinction Ethics",
+
+                    content: `
+        <b>Topic:</b> Recent advances in synthetic biology and genetic engineering have made the de-extinction of species such as the woolly mammoth and the dodo increasingly possible. While some scientists believe this technology could restore lost ecosystems, others argue that humans are dangerously “playing God” and may create serious ecological consequences.
+
+        <br><br>
+
+        <b>Question Analysis:</b>
+        Chủ đề tập trung vào:
+        <ul>
+            <li>Khả năng hồi sinh các loài đã tuyệt chủng bằng công nghệ gene</li>
+            <li>Vai trò của synthetic biology và genetic engineering</li>
+            <li>Câu hỏi đạo đức: con người có nên “đóng vai Thượng đế”?</li>
+            <li>Nguy cơ mất cân bằng sinh thái khi đưa loài tuyệt chủng trở lại</li>
+            <li>Lợi ích khoa học và bảo tồn sinh học</li>
+            <li>Trách nhiệm của con người đối với thiên nhiên và tiến hóa</li>
+        </ul>
+
+        <b>Main Direction:</b>
+        Phân tích rằng công nghệ hồi sinh sinh vật tuyệt chủng vừa mở ra tiềm năng khoa học to lớn, vừa đặt ra các vấn đề đạo đức và sinh thái cực kỳ phức tạp.
+        `,
+
+                    logic: `
+        Logic triển khai:
+        <br>
+        Genetic engineering + synthetic biology → Possibility of de-extinction
+        <br><br>
+        Potential ecological restoration → Scientific benefits
+        <br><br>
+        However:
+        <br>
+        Ethical concerns and ecological imbalance may emerge.
+        <br><br>
+        Final idea:
+        <br>
+        Humanity must balance scientific ambition with ecological responsibility and bio-ethical considerations.
+        `
+                },
+
+                band5: {
+                    title: "Ý tưởng đơn giản",
+
+                    content: `
+        Ngày nay, các nhà khoa học đang sử dụng <b>genetic engineering</b> để cố gắng hồi sinh những loài động vật đã tuyệt chủng như voi ma mút hoặc chim dodo. 
+        Một số người cho rằng đây là bước tiến lớn của khoa học hiện đại.
+
+        Công nghệ này có thể giúp con người nghiên cứu thêm về thiên nhiên và bảo vệ <b>biodiversity</b>. 
+        Một số nhà khoa học tin rằng các loài được hồi sinh có thể giúp phục hồi môi trường tự nhiên trong tương lai.
+
+        Tuy nhiên, nhiều người lo ngại rằng con người đang “playing God” khi can thiệp quá sâu vào tự nhiên. 
+        Họ cho rằng việc đưa loài tuyệt chủng trở lại có thể tạo ra <b>ecological imbalance</b>.
+
+        Ngoài ra, những loài này có thể không thích nghi được với môi trường hiện đại hoặc gây ảnh hưởng tiêu cực đến các hệ sinh thái hiện nay. 
+        Vì vậy, nhiều chuyên gia cho rằng cần có các quy định nghiêm ngặt về <b>bio-ethics</b> trước khi áp dụng công nghệ này rộng rãi.
+
+        <br><br>
+
+        <b>Useful Vocabulary:</b>
+
+        <ul>
+            <li><b>genetic engineering</b> — kỹ thuật di truyền</li>
+            <li><b>biodiversity</b> — đa dạng sinh học</li>
+            <li><b>ecological imbalance</b> — mất cân bằng sinh thái</li>
+            <li><b>bio-ethics</b> — đạo đức sinh học</li>
+            <li><b>extinct species</b> — loài tuyệt chủng</li>
+            <li><b>scientific research</b> — nghiên cứu khoa học</li>
+            <li><b>natural environment</b> — môi trường tự nhiên</li>
+            <li><b>wild animals</b> — động vật hoang dã</li>
+            <li><b>ecosystem</b> — hệ sinh thái</li>
+            <li><b>DNA technology</b> — công nghệ DNA</li>
+            <li><b>scientific progress</b> — tiến bộ khoa học</li>
+            <li><b>nature conservation</b> — bảo tồn thiên nhiên</li>
+            <li><b>animal extinction</b> — sự tuyệt chủng động vật</li>
+            <li><b>environmental risks</b> — rủi ro môi trường</li>
+            <li><b>laboratory science</b> — khoa học phòng thí nghiệm</li>
+        </ul>
+        `,
+
+                    logic: `
+        Logic:
+        <br>
+        Công nghệ gene giúp hồi sinh động vật tuyệt chủng.
+        <br><br>
+        Tuy nhiên:
+        <br>
+        Điều này có thể gây ra rủi ro sinh thái và tranh cãi đạo đức.
+        `
+                },
+
+                band7: {
+                    title: "Chiều sâu & Mở rộng",
+
+                    content: `
+        Những tiến bộ gần đây trong <b>synthetic biology</b> và <b>genetic engineering</b> đã khiến ý tưởng hồi sinh các loài tuyệt chủng trở nên khả thi hơn bao giờ hết. 
+        Các dự án liên quan đến voi ma mút hay chim dodo đang thu hút sự chú ý lớn từ cộng đồng khoa học toàn cầu.
+
+        Những người ủng hộ cho rằng công nghệ <b>de-extinction</b> có thể đóng góp cho <b>ecosystem restoration</b> và bảo tồn đa dạng sinh học. 
+        Ví dụ, việc tái đưa voi ma mút vào môi trường Bắc Cực có thể giúp phục hồi đồng cỏ cổ đại và làm chậm quá trình tan băng vĩnh cửu.
+
+        Ngoài ra, nghiên cứu về gene của các loài tuyệt chủng còn giúp mở rộng hiểu biết về tiến hóa và phát triển công nghệ y sinh hiện đại.
+
+        Tuy nhiên, nhiều nhà khoa học cảnh báo rằng việc can thiệp quá sâu vào tự nhiên có thể gây ra <b>ecological imbalance</b> nghiêm trọng. 
+        Những loài được hồi sinh có thể không thích nghi với hệ sinh thái hiện tại hoặc vô tình phá vỡ chuỗi thức ăn tự nhiên.
+
+        Hơn nữa, vấn đề <b>bio-ethics</b> cũng gây tranh cãi mạnh mẽ. 
+        Một số người cho rằng con người đang “playing God” khi cố gắng đảo ngược tiến trình tiến hóa tự nhiên vì mục đích khoa học hoặc thương mại.
+
+        Ngoài ra, nhiều chuyên gia cho rằng nguồn lực tài chính nên được ưu tiên cho việc bảo vệ các loài đang có nguy cơ tuyệt chủng thay vì hồi sinh các loài đã biến mất từ lâu.
+
+        <br><br>
+
+        <b>Useful Vocabulary:</b>
+
+        <ul>
+            <li><b>synthetic biology</b> — sinh học tổng hợp</li>
+            <li><b>genetic engineering</b> — kỹ thuật di truyền</li>
+            <li><b>de-extinction</b> — hồi sinh loài tuyệt chủng</li>
+            <li><b>ecosystem restoration</b> — phục hồi hệ sinh thái</li>
+            <li><b>ecological imbalance</b> — mất cân bằng sinh thái</li>
+            <li><b>bio-ethics</b> — đạo đức sinh học</li>
+            <li><b>evolutionary process</b> — quá trình tiến hóa</li>
+            <li><b>species preservation</b> — bảo tồn loài</li>
+            <li><b>environmental consequences</b> — hệ quả môi trường</li>
+            <li><b>genetic modification</b> — biến đổi gene</li>
+            <li><b>scientific innovation</b> — đổi mới khoa học</li>
+            <li><b>food chain disruption</b> — phá vỡ chuỗi thức ăn</li>
+            <li><b>climate adaptation</b> — thích nghi khí hậu</li>
+            <li><b>wildlife conservation</b> — bảo tồn động vật hoang dã</li>
+            <li><b>biological research</b> — nghiên cứu sinh học</li>
+        </ul>
+        `,
+
+                    logic: `
+        Logic:
+        <br>
+        Synthetic biology enables de-extinction projects.
+        <br><br>
+        Potential benefits:
+        <br>
+        Ecosystem restoration and scientific advancement.
+        <br><br>
+        However:
+        <br>
+        Ecological imbalance and ethical concerns may outweigh the benefits.
+        `
+                },
+
+                band9: {
+                    title: "Đa chiều & Phản biện",
+
+                    content: `
+        Sự phát triển nhanh chóng của <b>synthetic biology</b> và <b>genetic engineering</b> đang đưa nhân loại đến một thời điểm mang tính bước ngoặt, nơi việc hồi sinh các loài tuyệt chủng không còn chỉ là khoa học viễn tưởng mà dần trở thành khả năng thực tế.
+
+        Các dự án de-extinction như voi ma mút lông xoăn hoặc chim dodo được xem là biểu tượng cho quyền năng ngày càng lớn của con người đối với tự nhiên. 
+        Những người ủng hộ cho rằng công nghệ này có thể đóng vai trò quan trọng trong <b>ecosystem restoration</b>, phục hồi đa dạng sinh học và thậm chí hỗ trợ chống biến đổi khí hậu.
+
+        Ví dụ, một số nhà khoa học lập luận rằng việc tái đưa voi ma mút vào vùng Bắc Cực có thể giúp tái tạo đồng cỏ cổ đại, làm giảm tốc độ tan băng vĩnh cửu và hạn chế khí methane. 
+        Ngoài ra, nghiên cứu gene của các loài tuyệt chủng còn thúc đẩy tiến bộ trong y học, bảo tồn sinh học và công nghệ chỉnh sửa gene.
+
+        Tuy nhiên, những tiềm năng này đi kèm với các vấn đề <b>bio-ethical</b> cực kỳ phức tạp. 
+        Nhiều nhà phê bình cho rằng con người đang “playing God” bằng cách can thiệp vào tiến trình tiến hóa tự nhiên và tái tạo sự sống theo ý muốn của mình.
+
+        Một vấn đề quan trọng khác là nguy cơ <b>ecological imbalance</b>. 
+        Các loài tuyệt chủng từng tồn tại trong những hệ sinh thái hoàn toàn khác với hiện tại. 
+        Việc đưa chúng trở lại có thể gây ra những hậu quả không thể dự đoán đối với chuỗi thức ăn, đa dạng sinh học và sự ổn định môi trường.
+
+        Ngoài ra, còn tồn tại câu hỏi về chất lượng sống của các sinh vật được hồi sinh. 
+        Nếu chỉ có một số lượng nhỏ cá thể tồn tại trong môi trường nhân tạo hoặc sở thú, liệu đó có thực sự là “hồi sinh sự sống” hay chỉ là một dạng thử nghiệm sinh học phục vụ tham vọng khoa học?
+
+        Một số chuyên gia cũng cảnh báo rằng phong trào de-extinction có thể làm phân tán nguồn lực khỏi các nỗ lực bảo vệ các loài đang đứng trước nguy cơ tuyệt chủng hiện nay. 
+        Việc cứu những loài còn sống có thể thực tế và có ý nghĩa sinh thái hơn so với việc cố gắng hồi sinh những loài đã biến mất từ hàng nghìn năm trước.
+
+        Hơn nữa, công nghệ này còn mở ra nguy cơ thương mại hóa sự sống, nơi gene và sinh vật trở thành sản phẩm của ngành công nghiệp công nghệ sinh học toàn cầu.
+
+        Xét tổng thể, de-extinction phản ánh tham vọng kiểm soát tự nhiên ngày càng lớn của con người. 
+        Dù công nghệ này có thể mang lại đột phá khoa học đáng kinh ngạc, nhân loại vẫn cần thận trọng trước các hệ quả đạo đức, sinh thái và triết học mà nó có thể gây ra.
+
+        <br><br>
+
+        <b>Useful Vocabulary:</b>
+
+        <ul>
+            <li><b>synthetic biology</b> — sinh học tổng hợp</li>
+            <li><b>genetic engineering</b> — kỹ thuật di truyền</li>
+            <li><b>ecosystem restoration</b> — phục hồi hệ sinh thái</li>
+            <li><b>bio-ethical concerns</b> — các vấn đề đạo đức sinh học</li>
+            <li><b>ecological imbalance</b> — mất cân bằng sinh thái</li>
+            <li><b>de-extinction</b> — hồi sinh loài tuyệt chủng</li>
+            <li><b>evolutionary intervention</b> — can thiệp vào tiến hóa</li>
+            <li><b>genetic modification</b> — chỉnh sửa gene</li>
+            <li><b>biodiversity preservation</b> — bảo tồn đa dạng sinh học</li>
+            <li><b>food chain disruption</b> — phá vỡ chuỗi thức ăn</li>
+            <li><b>scientific ambition</b> — tham vọng khoa học</li>
+            <li><b>climate mitigation</b> — giảm thiểu biến đổi khí hậu</li>
+            <li><b>species revival</b> — hồi sinh loài</li>
+            <li><b>natural evolution</b> — tiến hóa tự nhiên</li>
+            <li><b>biotechnological innovation</b> — đổi mới công nghệ sinh học</li>
+            <li><b>ethical responsibility</b> — trách nhiệm đạo đức</li>
+            <li><b>environmental unpredictability</b> — tính khó đoán của môi trường</li>
+            <li><b>commercialization of life</b> — thương mại hóa sự sống</li>
+            <li><b>scientific accountability</b> — trách nhiệm khoa học</li>
+        </ul>
+        `,
+
+                    logic: `
+        Logic:
+        <br>
+        Synthetic biology enables humanity to revive extinct species.
+        <br><br>
+        Potential benefits:
+        <br>
+        Ecosystem restoration, biodiversity research, and scientific innovation.
+        <br><br>
+        However:
+        <br>
+        Humans may create ecological imbalance and cross ethical boundaries by interfering with natural evolution.
+        <br><br>
+        Final evaluation:
+        <br>
+        De-extinction forces humanity to reconsider the limits of scientific power and its moral responsibility toward nature.
+        `
+                },
+
+                summaryTable: [
+                    {
+                        label: 'Trọng tâm',
+                        b5: 'Hồi sinh động vật',
+                        b7: 'Khoa học & sinh thái',
+                        b9: 'Đạo đức và quyền lực khoa học'
+                    },
+
+                    {
+                        label: 'Kiểu lập luận',
+                        b5: 'Lợi ích & rủi ro',
+                        b7: 'Cause - Effect',
+                        b9: 'Đa chiều & triết học'
+                    },
+
+                    {
+                        label: 'Góc nhìn',
+                        b5: 'Môi trường',
+                        b7: 'Khoa học & đạo đức',
+                        b9: 'Sinh thái & triết học sinh học'
+                    },
+
+                    {
+                        label: 'Độ sâu ý tưởng',
+                        b5: 'Công nghệ gene',
+                        b7: 'Mất cân bằng sinh thái',
+                        b9: 'Con người “đóng vai Thượng đế”'
+                    },
+
+                    {
+                        label: 'Từ khóa nổi bật',
+                        b5: 'Genetic engineering, extinct species',
+                        b7: 'Synthetic biology, ecological imbalance',
+                        b9: 'Bio-ethics, evolutionary intervention'
+                    }
+                ]
+            },
+            {
+                id: "topic_death_of_boredom",
+
+                topicName: "Sự biến mất của cảm giác nhàm chán",
+
+                subjectText: "SOCIAL MEDIA AND HUMAN ATTENTION",
+
+                mainTopic: {
+                    title: "Chủ đề: The Death of Boredom in the TikTok Age",
+
+                    content: `
+        <b>Topic:</b> In the age of TikTok, short-form videos, and constant digital entertainment, many people rarely experience boredom anymore. While this may seem convenient, some experts argue that the disappearance of boredom could weaken creativity, deep thinking, and cognitive patience.
+
+        <br><br>
+
+        <b>Question Analysis:</b>
+        Chủ đề tập trung vào:
+        <ul>
+            <li>Con người liên tục tiêu thụ nội dung ngắn để tránh cảm giác chán</li>
+            <li>TikTok và mạng xã hội khai thác attention economy</li>
+            <li>Vòng lặp dopamine khiến người dùng khó tập trung lâu</li>
+            <li>Nhàm chán từng là điều kiện cho sáng tạo và suy nghĩ sâu</li>
+            <li>Khả năng tập trung và kiên nhẫn nhận thức đang suy giảm</li>
+            <li>Mối liên hệ giữa công nghệ, dopamine và tư duy hiện đại</li>
+        </ul>
+
+        <b>Main Direction:</b>
+        Phân tích rằng việc loại bỏ hoàn toàn cảm giác nhàm chán có thể đang làm suy yếu khả năng tư duy sâu, sáng tạo và sự kiên nhẫn nhận thức của con người trong thời đại số.
+        `,
+
+                    logic: `
+        Logic triển khai:
+        <br>
+        Short-form content + instant entertainment → Constant stimulation
+        <br><br>
+        Dopamine loops → Reduced attention span and cognitive patience
+        <br><br>
+        Final idea:
+        <br>
+        The disappearance of boredom may damage creativity and deep thinking in modern society.
+        `
+                },
+
+                band5: {
+                    title: "Ý tưởng đơn giản",
+
+                    content: `
+        Ngày nay, nhiều người sử dụng TikTok hoặc điện thoại mỗi khi cảm thấy chán. 
+        Ví dụ, khi chờ xe bus hoặc xếp hàng, mọi người thường xem video ngắn thay vì ngồi suy nghĩ hoặc quan sát xung quanh.
+
+        Các ứng dụng mạng xã hội cung cấp <b>instant entertainment</b> liên tục để giữ người dùng online lâu hơn. 
+        Điều này khiến con người hiếm khi trải qua cảm giác nhàm chán như trước đây.
+
+        Tuy nhiên, một số chuyên gia cho rằng <b>boredom</b> thực ra rất quan trọng đối với sự sáng tạo. 
+        Khi không bị phân tâm, con người có nhiều thời gian để tưởng tượng, suy nghĩ và phát triển ý tưởng mới.
+
+        Ngoài ra, việc xem video ngắn liên tục có thể tạo ra <b>dopamine loops</b>, khiến người dùng khó tập trung vào các hoạt động dài và cần nhiều kiên nhẫn như đọc sách hoặc học tập.
+
+        Vì vậy, nhiều người lo ngại rằng mạng xã hội đang làm giảm khả năng suy nghĩ sâu của thế hệ trẻ.
+
+        <br><br>
+
+        <b>Useful Vocabulary:</b>
+
+        <ul>
+            <li><b>instant entertainment</b> — giải trí tức thì</li>
+            <li><b>boredom</b> — sự nhàm chán</li>
+            <li><b>dopamine loops</b> — vòng lặp dopamine</li>
+            <li><b>social media</b> — mạng xã hội</li>
+            <li><b>short videos</b> — video ngắn</li>
+            <li><b>attention span</b> — khả năng tập trung</li>
+            <li><b>creative thinking</b> — tư duy sáng tạo</li>
+            <li><b>mobile phones</b> — điện thoại di động</li>
+            <li><b>online content</b> — nội dung trực tuyến</li>
+            <li><b>digital habits</b> — thói quen kỹ thuật số</li>
+            <li><b>mental focus</b> — sự tập trung tinh thần</li>
+            <li><b>constant stimulation</b> — kích thích liên tục</li>
+            <li><b>reading books</b> — đọc sách</li>
+            <li><b>deep thinking</b> — tư duy sâu</li>
+            <li><b>screen addiction</b> — nghiện màn hình</li>
+        </ul>
+        `,
+
+                    logic: `
+        Logic:
+        <br>
+        Con người dùng video ngắn để tránh cảm giác chán.
+        <br><br>
+        Tuy nhiên:
+        <br>
+        Điều này có thể làm giảm khả năng tập trung và sáng tạo.
+        `
+                },
+
+                band7: {
+                    title: "Chiều sâu & Mở rộng",
+
+                    content: `
+        Sự bùng nổ của TikTok và các nền tảng video ngắn đã thay đổi mạnh mẽ cách con người tiêu thụ thông tin và giải trí. 
+        Trong nền <b>attention economy</b>, các công ty công nghệ cạnh tranh để giữ sự chú ý của người dùng càng lâu càng tốt thông qua các nội dung ngắn, nhanh và gây kích thích cao.
+
+        Điều này tạo ra các <b>dopamine loops</b>, nơi não bộ liên tục tìm kiếm phần thưởng tức thì từ video mới, lượt thích và thông báo. 
+        Kết quả là nhiều người trở nên khó tập trung vào các hoạt động cần thời gian dài như đọc sách, nghiên cứu hoặc suy nghĩ phản biện.
+
+        Một số nhà tâm lý học cho rằng cảm giác <b>boredom</b> thực chất đóng vai trò quan trọng đối với sự sáng tạo và tư duy sâu. 
+        Khi não bộ không bị kích thích liên tục, con người có xu hướng tưởng tượng, suy ngẫm và phát triển ý tưởng mới.
+
+        Tuy nhiên, trong môi trường số hiện đại, khoảng thời gian “không làm gì” gần như đã biến mất. 
+        Mọi khoảnh khắc chờ đợi đều được lấp đầy bằng điện thoại và nội dung trực tuyến.
+
+        Điều này có thể làm suy giảm <b>cognitive patience</b> và khiến con người ngày càng phụ thuộc vào kích thích nhanh để duy trì sự chú ý. 
+        Về lâu dài, xu hướng này có thể ảnh hưởng tiêu cực đến giáo dục, sáng tạo và sức khỏe tinh thần.
+
+        <br><br>
+
+        <b>Useful Vocabulary:</b>
+
+        <ul>
+            <li><b>attention economy</b> — nền kinh tế chú ý</li>
+            <li><b>dopamine loops</b> — vòng lặp dopamine</li>
+            <li><b>boredom</b> — sự nhàm chán</li>
+            <li><b>cognitive patience</b> — sự kiên nhẫn nhận thức</li>
+            <li><b>instant gratification</b> — sự thỏa mãn tức thì</li>
+            <li><b>short-form content</b> — nội dung dạng ngắn</li>
+            <li><b>mental stimulation</b> — kích thích tinh thần</li>
+            <li><b>critical thinking</b> — tư duy phản biện</li>
+            <li><b>attention span</b> — thời gian tập trung</li>
+            <li><b>digital distraction</b> — sự xao nhãng kỹ thuật số</li>
+            <li><b>creative imagination</b> — trí tưởng tượng sáng tạo</li>
+            <li><b>behavioral addiction</b> — nghiện hành vi</li>
+            <li><b>online engagement</b> — mức độ tương tác trực tuyến</li>
+            <li><b>deep concentration</b> — sự tập trung sâu</li>
+            <li><b>algorithm-driven content</b> — nội dung do thuật toán điều hướng</li>
+        </ul>
+        `,
+
+                    logic: `
+        Logic:
+        <br>
+        The attention economy encourages constant digital stimulation.
+        <br><br>
+        Result:
+        <br>
+        People become trapped in dopamine loops and lose cognitive patience.
+        <br><br>
+        Therefore:
+        <br>
+        The disappearance of boredom may weaken creativity and deep thinking.
+        `
+                },
+
+                band9: {
+                    title: "Đa chiều & Phản biện",
+
+                    content: `
+        Sự phát triển của TikTok và các nền tảng nội dung ngắn đã tạo ra một môi trường mà trong đó con người gần như không còn trải nghiệm cảm giác <b>boredom</b>. 
+        Mọi khoảnh khắc chờ đợi — từ đi xe bus, xếp hàng đến ngồi một mình — đều được lấp đầy bằng các luồng nội dung được cá nhân hóa liên tục.
+
+        Trong nền <b>attention economy</b>, sự chú ý của con người đã trở thành tài nguyên kinh tế quan trọng nhất. 
+        Các thuật toán được thiết kế để tối đa hóa <b>user engagement</b> bằng cách cung cấp các kích thích nhanh, ngắn và giàu dopamine.
+
+        Điều này tạo ra các <b>dopamine loops</b> khiến não bộ liên tục tìm kiếm phần thưởng tức thì. 
+        Theo thời gian, con người dần mất khả năng chịu đựng sự chậm rãi, im lặng hoặc thiếu kích thích — những trạng thái từng đóng vai trò quan trọng đối với quá trình suy nghĩ sâu và sáng tạo.
+
+        Một nghịch lý đáng chú ý là boredom, thứ thường bị xem là tiêu cực, thực chất lại là điều kiện tâm lý cần thiết cho <b>creative cognition</b>. 
+        Khi não bộ không bị phân tâm liên tục, nó có xu hướng tự suy ngẫm, kết nối ý tưởng và phát triển trí tưởng tượng.
+
+        Tuy nhiên, môi trường số hiện đại gần như đã “giết chết” các khoảng trống nhận thức đó. 
+        Con người ngày càng quen với việc tiêu thụ nội dung thay vì chủ động suy nghĩ, dẫn đến sự suy giảm của <b>deep attention</b> và <b>cognitive patience</b>.
+
+        Ngoài ra, việc tiếp xúc liên tục với các kích thích ngắn còn ảnh hưởng đến giáo dục và khả năng học tập dài hạn. 
+        Nhiều học sinh và sinh viên gặp khó khăn khi đọc tài liệu dài hoặc tập trung vào các nhiệm vụ đòi hỏi suy nghĩ phức tạp.
+
+        Tuy nhiên, một số người cho rằng công nghệ không hoàn toàn có hại. 
+        Video ngắn cũng có thể cung cấp kiến thức nhanh, giải trí và kết nối xã hội hiệu quả nếu được sử dụng hợp lý.
+
+        Vấn đề cốt lõi nằm ở việc liệu con người còn có khả năng chủ động kiểm soát sự chú ý của mình hay không. 
+        Khi mọi nền tảng đều cạnh tranh để chiếm lấy thời gian và dopamine của người dùng, sự tập trung sâu có thể trở thành một kỹ năng ngày càng hiếm trong xã hội hiện đại.
+
+        Xét tổng thể, sự biến mất của boredom phản ánh một thay đổi sâu sắc trong cách não bộ con người tương tác với công nghệ. 
+        Nếu không phát triển đủ <b>digital self-control</b>, xã hội có thể đánh đổi khả năng tư duy sâu lấy sự kích thích tức thì và giải trí liên tục.
+
+        <br><br>
+
+        <b>Useful Vocabulary:</b>
+
+        <ul>
+            <li><b>attention economy</b> — nền kinh tế chú ý</li>
+            <li><b>dopamine loops</b> — vòng lặp dopamine</li>
+            <li><b>cognitive patience</b> — sự kiên nhẫn nhận thức</li>
+            <li><b>user engagement</b> — mức độ tương tác người dùng</li>
+            <li><b>creative cognition</b> — tư duy sáng tạo</li>
+            <li><b>deep attention</b> — sự chú ý sâu</li>
+            <li><b>instant gratification</b> — sự thỏa mãn tức thì</li>
+            <li><b>algorithmic stimulation</b> — kích thích từ thuật toán</li>
+            <li><b>digital distraction</b> — xao nhãng kỹ thuật số</li>
+            <li><b>behavioral addiction</b> — nghiện hành vi</li>
+            <li><b>mental overstimulation</b> — quá tải kích thích tinh thần</li>
+            <li><b>short-form media</b> — truyền thông dạng ngắn</li>
+            <li><b>attention fragmentation</b> — sự phân mảnh chú ý</li>
+            <li><b>reflective thinking</b> — tư duy phản chiếu</li>
+            <li><b>neural reward system</b> — hệ thống phần thưởng thần kinh</li>
+            <li><b>digital self-control</b> — khả năng tự kiểm soát kỹ thuật số</li>
+            <li><b>passive consumption</b> — tiêu thụ thụ động</li>
+            <li><b>intellectual depth</b> — chiều sâu trí tuệ</li>
+            <li><b>algorithm-driven entertainment</b> — giải trí do thuật toán điều hướng</li>
+        </ul>
+        `,
+
+                    logic: `
+        Logic:
+        <br>
+        Short-form platforms eliminate boredom through constant stimulation.
+        <br><br>
+        Result:
+        <br>
+        People become dependent on dopamine-driven entertainment and lose cognitive patience.
+        <br><br>
+        Consequence:
+        <br>
+        Creativity, deep thinking, and sustained attention gradually weaken.
+        <br><br>
+        Final evaluation:
+        <br>
+        The disappearance of boredom may represent a hidden cognitive cost of the digital attention economy.
+        `
+                },
+
+                summaryTable: [
+                    {
+                        label: 'Trọng tâm',
+                        b5: 'Video ngắn',
+                        b7: 'Dopamine & tập trung',
+                        b9: 'Khủng hoảng chú ý'
+                    },
+
+                    {
+                        label: 'Kiểu lập luận',
+                        b5: 'Nguyên nhân - hậu quả',
+                        b7: 'Cause - Effect',
+                        b9: 'Tâm lý học & xã hội số'
+                    },
+
+                    {
+                        label: 'Góc nhìn',
+                        b5: 'Người dùng điện thoại',
+                        b7: 'Mạng xã hội & não bộ',
+                        b9: 'Kinh tế chú ý & nhận thức'
+                    },
+
+                    {
+                        label: 'Độ sâu ý tưởng',
+                        b5: 'Nghiện video ngắn',
+                        b7: 'Mất kiên nhẫn nhận thức',
+                        b9: 'Suy giảm tư duy sâu'
+                    },
+
+                    {
+                        label: 'Từ khóa nổi bật',
+                        b5: 'Short videos, boredom',
+                        b7: 'Attention economy, dopamine loops',
+                        b9: 'Cognitive patience, deep attention'
+                    }
+                ]
+            },
+        ];
+
+        const wrapper = document.getElementById('sections-wrapper');
+        const navList = document.getElementById('nav-list');
+        let currentIndex = 0;
+        let totalSections = 0;
+
+        function renderAll() {
+            // Xóa sạch nội dung cũ nếu có
+            wrapper.innerHTML = '';
+            navList.innerHTML = '<div class="nav-title" style="font-weight: 800; font-size: 0.7rem; color: #6fc2e9; margin-bottom: 10px; letter-spacing: 1px;">CHỌN CHỦ ĐỀ</div>';
+
+            IELTS_DATA.forEach((topic, tIdx) => {
+                // 1. Render Menu bên trái
+                const a = document.createElement('a');
+                a.className = 'nav-item';
+                a.innerText = topic.topicName;
+                a.onclick = () => goToSection(tIdx * 5); // Mỗi topic có 5 sections
+                navList.appendChild(a);
+
+                // 2. Render các Section nội dung
+                createSection(topic.subjectText, 'topic', 'Topic', topic.mainTopic.title, topic.mainTopic.content, topic.mainTopic.logic);
+                createSection(topic.subjectText, '5', 'Band 5.0', topic.band5.title, topic.band5.content, topic.band5.logic);
+                createSection(topic.subjectText, '7', 'Band 7.0', topic.band7.title, topic.band7.content, topic.band7.logic);
+                createSection(topic.subjectText, '9', 'Band 9.0', topic.band9.title, topic.band9.content, topic.band9.logic);
+                createTableSection(topic.subjectText, topic.summaryTable);
+            });
+
+            totalSections = document.querySelectorAll('.hero-section').length;
+            updateButtons();
+        }
+
+        function createSection(sub, type, tag, title, content, logic) {
+            const sec = document.createElement('section');
+            sec.className = 'hero-section';
+            sec.innerHTML = `
+                <div class="parallax-subject" data-speed="0.2">${sub}</div>
+                <div class="info-card">
+                    <div class="card-header"><span class="tag tag-${type}">${tag}</span><h2>${title}</h2></div>
+                    <div class="card-body"><div class="content-text">${content}</div><div class="logic-note">${logic}</div></div>
+                </div>`;
+            wrapper.appendChild(sec);
+        }
+
+        function createTableSection(sub, rows) {
+            const sec = document.createElement('section');
+            sec.className = 'hero-section';
+            let tableHtml = `<table class="ghibli-table">` +
+                rows.map(r => `<tr><td><b>${r.label}</b></td><td>${r.b5}</td><td>${r.b7}</td><td>${r.b9}</td></tr>`).join('') +
+                `</table>`;
+            sec.innerHTML = `
+                <div class="parallax-subject" data-speed="-0.2">REVIEW</div>
+                <div class="info-card">
+                    <div class="card-header"><span class="tag tag-summary">Comparison</span><h2>Tóm tắt</h2></div>
+                    <div class="card-body">${tableHtml}</div>
+                </div>`;
+            wrapper.appendChild(sec);
+        }
+
+        // --- HÀM ĐIỀU HƯỚNG MỚI ---
+        function moveSection(direction) {
+            const newIndex = currentIndex + direction;
+            if (newIndex >= 0 && newIndex < totalSections) {
+                goToSection(newIndex);
+            }
+        }
+
+        function goToSection(index) {
+            currentIndex = index;
+            wrapper.style.transform = `translateY(-${index * 100}vh)`;
+            updateButtons();
+        }
+
+        function updateButtons() {
+            // Vô hiệu hóa nút nếu đã ở đầu hoặc cuối trang
+            document.getElementById('btn-up').disabled = (currentIndex === 0);
+            document.getElementById('btn-down').disabled = (currentIndex === totalSections - 1);
+        }
+
+        // CHẶN LĂN CHUỘT KHI KHÔNG Ở TRONG CARD-BODY
+        window.addEventListener('wheel', (e) => {
+            const isInsideCardBody = e.target.closest('.card-body');
+            if (!isInsideCardBody) {
+                e.preventDefault();
+                // Có thể thêm tính năng lăn chuột để chuyển trang tại đây nếu thầy muốn
+                // if (e.deltaY > 0) moveSection(1); else moveSection(-1);
+            }
+        }, { passive: false });
+
+        // Khởi chạy
+        renderAll();
+
+        // Parallax Effect
+        function animate() {
+            const subjects = document.querySelectorAll('.parallax-subject');
+            subjects.forEach(el => {
+                const rect = el.parentElement.getBoundingClientRect();
+                const offset = rect.top;
+                const speed = parseFloat(el.getAttribute('data-speed'));
+                el.style.transform = `translateX(${offset * speed}px)`;
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
+</body>
+
+</html>
